@@ -15,8 +15,12 @@ mongoose.connect(process.env.MONGO_URL, {
     useUnifiedTopology: true
 }).then(() =>
     console.log("MongoDB connected successfully")
-).catch((err) => 
+).catch((err) =>
     console.log("MongoDB connection error: ", err)
 )
+
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "Youtube Clone Server Running..." })
+})
 
 app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}`));
