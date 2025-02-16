@@ -8,7 +8,7 @@ const videoSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    thumbnail: {
+    thumbnailUrl: {
         type: String
     },
     videoUrl: {
