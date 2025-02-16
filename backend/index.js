@@ -5,6 +5,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
+import commentRoutes from "./routes/commentRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -31,3 +32,4 @@ app.listen(PORT, () => console.log(`Server running on PORT: ${PORT}`));
 authRoutes(app);
 channelRoutes(app);
 videoRoutes(app);
+commentRoutes(app);
