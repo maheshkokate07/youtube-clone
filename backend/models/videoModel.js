@@ -1,4 +1,9 @@
 import mongoose from "mongoose";
+import Channel from "./channelModel.js";
+import Comment from "./commentModel.js";
+import cloudinary from "../config/cloudinary.js";
+
+const User = mongoose.models.User;
 
 const videoSchema = new mongoose.Schema({
     title: {
@@ -44,6 +49,35 @@ const videoSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     }
+})
+
+videoSchema.pre("findOneAndDelete", async function (next) {
+    const doc = await this.model.findOne(this.getFilter());
+
+    if (doc) {
+        try {
+            await Channel.findByIdAndUpdate(doc.channelId, {
+                $pull: { videos: doc._id }
+            });
+
+            await User.findByIdAndUpdate(doc.uploader, {
+                $pull: { uplodedVideos: doc._id }
+            });
+
+            await Comment.deleteMany({ videoId: doc._id });
+
+            const videoPublicId = doc.videoUrl.split("/").pop().split(".")[0];
+            const thumbnailPublicId = doc.thumbnailUrl.split("/").pop().split(".")[0];
+
+            await cloudinary.uploader.destroy(`youtube-clone/videos/${videoPublicId}`, { resource_type: "video" });
+            await cloudinary.uploader.destroy(`youtube-clone/thumbnails/${thumbnailPublicId}`, { resource_type: "image" });
+
+            console.log("Thumbnail and video deleted from cloudinary");
+        } catch (err) {
+            console.log("Error in delete video middleware");
+        }
+    }
+    next();
 })
 
 const Video = mongoose.model("Video", videoSchema);

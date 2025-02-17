@@ -47,3 +47,19 @@ export const uploadVideo = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }
 }
+
+export const deleteVideo = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+
+        const deletedVideo = await Video.findOneAndDelete({ _id: videoId });
+
+        if (!deletedVideo) {
+            res.status(404).json({ message: "Video not found" });
+        }
+
+        res.status(200).json({ message: "Video deleted" })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message })
+    }
+}
