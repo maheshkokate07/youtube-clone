@@ -63,3 +63,67 @@ export const deleteVideo = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }
 }
+
+export const getAllVideos = async (req, res) => {
+    try {
+        const videos = await Video.find().populate("channelId", "_id channelName");
+        if (videos.length === 0) {
+            return res.status(404).json({ message: "No videos found" })
+        }
+        return res.status(200).json({ message: "Videos fetched", videos })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message })
+    }
+}
+
+export const likeVideo = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+        const { userId } = req.body;
+
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res.status(404).json({ message: "Video not found" });
+        }
+
+        const likeAction = video.likes.includes(userId)
+            ? { $pull: { likes: userId } }
+            : { $addToSet: { likes: userId } }
+
+        const updatedVideo = await Video.findByIdAndUpdate(videoId, {
+            $pull: { dislikes: userId },
+            ...likeAction
+        }, { new: true });
+
+        res.status(200).json({ message: "Likes updated", likes: updatedVideo.likes.length, dislikes: updatedVideo.dislikes.length });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message })
+    }
+}
+
+export const dislikeVideo = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+        const { userId } = req.body;
+
+        const video = await Video.findById(videoId);
+
+        if (!video) {
+            return res.status(404).json({ message: "No video found" });
+        }
+
+        const dislikeAction = video.dislikes.includes(userId)
+            ? { $pull: { dislikes: userId } }
+            : { $addToSet: { dislikes: userId } }
+
+        const updatedVideo = await Video.findByIdAndUpdate(videoId, {
+            $pull: { likes: userId },
+            ...dislikeAction
+        }, { new: true });
+
+        res.status(200).json({ message: "Dislikes updated", likes: updatedVideo.likes.length, dislikes: updatedVideo.dislikes.length });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message })
+    }
+}
