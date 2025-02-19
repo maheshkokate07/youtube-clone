@@ -1,3 +1,4 @@
+import cloudinary from "../config/cloudinary.js";
 import Channel from "../models/channelModel.js";
 import User from "../models/UserModel.js";
 
@@ -32,6 +33,46 @@ export const createChannel = async (req, res) => {
             message: "Channel created",
             channel: newChannel
         })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message })
+    }
+}
+
+export const updateChannel = async (req, res) => {
+    try {
+        const { channelId } = req.params;
+        const { channelName, description } = req.body;
+
+        const channel = await Channel.findById(channelId);
+
+        if (!channel) {
+            return res.status(404).json({ message: "Channel not found" })
+        }
+
+        if (req.file) {
+            if (channel.avatarUrl) {
+                try {
+                    const avatarPublicId = channel.avatarUrl.split("/").pop().split(".")[0];
+                    await cloudinary.uploader.destroy(`youtube-clone/channelAvatar/${avatarPublicId}`, { resource_type: "image" })
+                } catch (err) {
+                    console.log(err.message);
+                }
+            }
+            channel.avatarUrl = req.file.path;
+        }
+
+        if (channelName) {
+            channel.channelName = channelName
+        }
+
+        if (description) {
+            channel.description = description
+        }
+
+        await channel.save();
+
+        res.status(200).json({ message: "Channel updated", channel });
+
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }

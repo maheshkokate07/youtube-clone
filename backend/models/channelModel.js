@@ -16,9 +16,6 @@ const channelSchema = new mongoose.Schema({
     description: {
         type: String
     },
-    channelBanner: {
-        type: String
-    },
     subscribers: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
