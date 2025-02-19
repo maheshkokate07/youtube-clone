@@ -74,7 +74,7 @@ videoSchema.pre("findOneAndDelete", async function (next) {
 
             console.log("Thumbnail and video deleted from cloudinary");
         } catch (err) {
-            console.log("Error in delete video middleware");
+            console.log("Error in delete video middleware", err.message);
         }
     }
     next();

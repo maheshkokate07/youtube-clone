@@ -29,3 +29,19 @@ export const createChannel = async (req, res) => {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }
 }
+
+export const getChannelVideos = async (req, res) => {
+    try {
+        const { channelId } = req.params;
+
+        const channel = await Channel.findById(channelId);
+
+        if (!channel) {
+            return res.status(404).json({ message: "Channel not found" })
+        }
+
+        res.status(200).json({ message: "Channel info fetched", data: channel });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}

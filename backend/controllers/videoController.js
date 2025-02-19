@@ -48,6 +48,28 @@ export const uploadVideo = async (req, res) => {
     }
 }
 
+export const getChannelVideos = async (req, res) => {
+    try {
+        const { channelId } = req.params;
+        const { page = 1, limit = 10 } = req.query;
+
+        const videos = await Video.find({ channelId })
+            .select("_id title thumbnailUrl views uploadDate")
+            .sort({ uploadDate: -1 })
+            .skip((page - 1) * limit)
+            .limit(Number(limit));
+
+        res.status(200).json({
+            message: "Videos fetched",
+            videos,
+            page: Number(page),
+            totalVideos: await Video.countDocuments({ channelId })
+        })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}
+
 export const deleteVideo = async (req, res) => {
     try {
         const { videoId } = req.params;
