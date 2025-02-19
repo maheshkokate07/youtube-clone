@@ -5,6 +5,9 @@ const channelSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    avatarUrl: {
+        type: String
+    },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",

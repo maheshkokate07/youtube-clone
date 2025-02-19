@@ -20,6 +20,15 @@ const thumbnailStorage = new CloudinaryStorage({
     }
 });
 
+const channelAvatarStorage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "youtube-clone/channelAvatar",
+        resource_type: "image",
+        allowedFormats: ["jpg", "jpeg", "png"]
+    }
+})
+
 const customStorage = {
     _handleFile: function (req, file, cb) {
         let storage;
@@ -41,3 +50,7 @@ export const uploadVideoAndThumbnail = multer({
     { name: "video", maxCount: 1 },
     { name: "thumbnail", maxCount: 1 },
 ]);
+
+export const uploadChannelAvatar = multer({
+    storage: channelAvatarStorage,
+}).single("channelAvatar")

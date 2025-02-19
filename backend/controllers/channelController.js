@@ -5,6 +5,12 @@ export const createChannel = async (req, res) => {
     try {
         const { userId, channelName, description } = req.body;
 
+        let avatarUrl = ""
+
+        if (req.file) {
+            avatarUrl = req.file.path;
+        }
+
         const user = await User.findById(userId);
         if (user.channel) {
             return res.status(400).json({ message: "User already has a channel" });
@@ -13,7 +19,8 @@ export const createChannel = async (req, res) => {
         const newChannel = new Channel({
             channelName,
             owner: userId,
-            description
+            description,
+            avatarUrl
         })
 
         await newChannel.save();
@@ -30,7 +37,7 @@ export const createChannel = async (req, res) => {
     }
 }
 
-export const getChannelVideos = async (req, res) => {
+export const getChannel = async (req, res) => {
     try {
         const { channelId } = req.params;
 
