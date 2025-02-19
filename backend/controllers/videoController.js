@@ -98,6 +98,41 @@ export const getAllVideos = async (req, res) => {
     }
 }
 
+export const searchVideo = async (req, res) => {
+    try {
+        const { searchTerm, page = 1, limit = 10 } = req.query;
+
+        const videos = await Video.find({
+            $or: [
+                { title: { $regex: searchTerm, $options: "i" } },
+                { description: { $regex: searchTerm, $options: "i" } }
+            ]
+        })
+            .select("_id title thumbnailUrl views uploadDate")
+            .sort({ uploadDate: -1 })
+            .skip((page - 1) * limit)
+            .limit(Number(limit))
+
+        if (!videos.length) {
+            return res.status(404).json({ message: "No videos found" })
+        }
+
+        res.status(200).json({
+            message: "Vidoes fetched",
+            videos,
+            page: Number(page),
+            totalVideos: await Video.countDocuments({
+                $or: [
+                    { title: { $regex: searchTerm, $options: "i" } },
+                    { description: { $regex: searchTerm, $options: "i" } }
+                ]
+            })
+        })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message })
+    }
+}
+
 export const likeVideo = async (req, res) => {
     try {
         const { videoId } = req.params;

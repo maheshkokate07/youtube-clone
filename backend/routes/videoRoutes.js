@@ -1,4 +1,4 @@
-import { deleteVideo, dislikeVideo, getAllVideos, getChannelVideos, likeVideo, uploadVideo } from "../controllers/videoController.js";
+import { deleteVideo, dislikeVideo, getAllVideos, getChannelVideos, likeVideo, searchVideo, uploadVideo } from "../controllers/videoController.js";
 import { uploadVideoAndThumbnail } from "../middleware/upload.js";
 
 export default function videoRoutes(app) {
@@ -10,4 +10,5 @@ export default function videoRoutes(app) {
     app.post("/dislike-video/:videoId", dislikeVideo);
 
     app.get("/channel/videos/:channelId", getChannelVideos);
+    app.get("/videos/search", searchVideo)
 }
