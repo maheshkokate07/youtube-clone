@@ -48,6 +48,27 @@ export const uploadVideo = async (req, res) => {
     }
 }
 
+export const getVideoById = async (req, res) => {
+    try {
+        const { videoId } = req.params;
+
+        const video = await Video.findByIdAndUpdate(
+            videoId,
+            { $inc: { views: 1 } },
+            { new: true }
+        ).populate("channelId", "_id channelName avatarUrl");
+
+        if (!video) {
+            return res.status(404).json({ message: "Video not found" });
+        }
+
+        res.status(200).json({ message: "Video fetched", video: video })
+
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}
+
 export const getChannelVideos = async (req, res) => {
     try {
         const { channelId } = req.params;
@@ -88,11 +109,16 @@ export const deleteVideo = async (req, res) => {
 
 export const getAllVideos = async (req, res) => {
     try {
-        const videos = await Video.find().populate("channelId", "_id channelName");
+        const { page = 1, limit = 10 } = req.query;
+        const videos = await Video.find().populate("channelId", "_id channelName")
+            .sort({ uploadDate: -1 })
+            .skip((page - 1) * limit)
+            .limit(Number(limit));
+
         if (videos.length === 0) {
             return res.status(404).json({ message: "No videos found" })
         }
-        return res.status(200).json({ message: "Videos fetched", videos })
+        return res.status(200).json({ message: "Videos fetched", videos, page: Number(page), totalVideos: await Video.countDocuments() })
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }
