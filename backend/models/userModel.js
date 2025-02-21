@@ -22,6 +22,9 @@ const userSchema = new mongoose.Schema({
     },
     uplodedVideos: [{
         type: mongoose.Schema.Types.ObjectId, ref: "Video"
+    }],
+    subscribedChannels: [{
+        type: mongoose.Schema.Types.ObjectId, ref: "Channel"
     }]
 })
 

@@ -38,6 +38,39 @@ export const createChannel = async (req, res) => {
     }
 }
 
+export const subscribeChannel = async (req, res) => {
+    try {
+
+        const { channelId } = req.params;
+        const { userId } = req.body;
+
+        const channel = await Channel.findById(channelId);
+        if (!channel) {
+            return res.status(404).json({ message: "Channel not found" })
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: "User not found" })
+        }
+
+        if (channel.subscribers.includes(userId)) {
+            await Channel.findByIdAndUpdate(channelId, { $pull: { subscribers: userId } });
+            await User.findByIdAndUpdate(userId, { $pull: { subscribedChannels: channelId } });
+
+            return res.status(200).json({ message: "Channel unsubscribed" })
+        } else {
+            await Channel.findByIdAndUpdate(channelId, { $addToSet: { subscribers: userId } });
+            await User.findByIdAndUpdate(userId, { $addToSet: { subscribedChannels: channelId } });
+
+            return res.status(200).json({ message: "Channel subscribed" });
+        }
+
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}
+
 export const updateChannel = async (req, res) => {
     try {
         const { channelId } = req.params;
