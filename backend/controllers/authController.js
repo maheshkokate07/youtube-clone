@@ -1,6 +1,7 @@
 import bcrypt from "bcryptjs";
 import User from "../models/UserModel.js";
 import jwt from "jsonwebtoken";
+import cloudinary from "../config/cloudinary.js";
 
 export const registerUser = async (req, res) => {
     try {
@@ -31,6 +32,52 @@ export const loginUser = async (req, res) => {
             email: user.email
         }, "secret", { expiresIn: "24h" });
         res.status(200).json({ message: "User login successful", token: token })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}
+
+export const getUserProfile = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const user = await User.findById(userId).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found", error: err.message });
+        }
+
+        res.status(200).json({ message: "User profile fetched", user })
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err.message });
+    }
+}
+
+export const updateProfile = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (req.file) {
+            if (user.userAvatar) {
+                try {
+                    const avatarPublicId = user.userAvatar.split("/").pop().split(".")[0];
+                    await cloudinary.uploader.destroy(`youtube-clone/userAvatar/${avatarPublicId}`, { resource_type: "image" })
+                } catch (err) {
+                    console.log(err.message);
+                }
+            }
+            user.userAvatar = req.file.path;
+        }
+
+        await user.save();
+
+        res.status(200).json({ message: "User profile image updated", user })
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message });
     }
