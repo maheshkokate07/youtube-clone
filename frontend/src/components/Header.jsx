@@ -8,7 +8,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logout } from "../store/slices/authSlice";
 
-function Header() {
+function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
     const { isAuthenticated } = useSelector(state => state.auth.user);
     const userImg = "";
@@ -24,12 +24,12 @@ function Header() {
     };
 
     return (
-        <div className="w-full h-[55px] relative flex md:px-3 justify-between">
+        <div className="w-full h-[57px] relative flex md:px-4 justify-between">
 
             {loading && <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 animate-loading"></div>}
 
             <div className="flex">
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center" onClick={() => setIsSidebarCompact(!isSidebarCompact)}>
                     <PiListThin size={40} className="cursor-pointer font-extralight hover:bg-gray-100 rounded-full p-2" />
                 </div>
                 <div className="h-full w-[120px] flex items-center justify-center">
@@ -86,13 +86,13 @@ function Header() {
                                         className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                                         onClick={() => navigate("/account")}
                                     >
-                                        View Account
+                                        Your Account
                                     </button>
                                     <button
                                         className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                                         onClick={() => channel ? navigate("/channel") : navigate("/create-channel")}
                                     >
-                                        {channel ? "View Channel" : "Create Channel"}
+                                        {channel ? "Your Channel" : "Create Channel"}
                                     </button>
                                     {
                                         channel &&
@@ -117,7 +117,6 @@ function Header() {
                         </div>
                 }
             </div>
-
         </div >
     )
 }
