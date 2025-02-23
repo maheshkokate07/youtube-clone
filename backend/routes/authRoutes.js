@@ -2,7 +2,7 @@ import { getUserProfile, loginUser, registerUser, updateProfile } from "../contr
 import { uploadUserAvatar } from "../middleware/upload.js";
 
 export default function authRoutes(app) {
-    app.post("/register", registerUser);
+    app.post("/api/user/register", registerUser);
     app.post("/api/user/login", loginUser);
 
     app.get("/user/:userId", getUserProfile);

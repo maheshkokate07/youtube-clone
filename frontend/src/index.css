@@ -5,3 +5,13 @@
   line-height: 1.5;
   font-weight: 400;
 }
+
+@keyframes loadingBar {
+  0% { width: 0%; }
+  50% { width: 60%; }
+  100% { width: 100%; }
+}
+
+.animate-loading {
+  animation: loadingBar 1.5s ease-in-out infinite;
+}

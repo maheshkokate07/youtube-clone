@@ -13,7 +13,7 @@ export const loginUser = createAsyncThunk(
         }
 
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/user/login`, credentials, config);
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/login`, credentials, config);
             const { token } = response.data;
 
             if (!token) return rejectWithValue("Invalid token received from server");

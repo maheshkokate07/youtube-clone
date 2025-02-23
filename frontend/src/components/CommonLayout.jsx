@@ -5,7 +5,7 @@ function CommonLayout({ children }) {
     return (
         <div>
             <Header />
-            <div>
+            <div className="flex">
                 <Sidebar />
                 {children}
             </div>

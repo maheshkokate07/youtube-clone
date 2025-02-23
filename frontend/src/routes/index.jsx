@@ -2,19 +2,19 @@ import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import Login from "../pages/Login";
 import CommonLayout from "../components/CommonLayout";
 import Home from "../pages/Home";
-import { useSelector } from "react-redux";
 import ProtectedRoutes from "./ProtectedRoutes";
+import { useSelector } from "react-redux";
 
 const AppRoutes = () => {
 
-    const { token } = useSelector(state => state.auth.user);
+    const { isAuthenticated } = useSelector(state => state.auth.user);
 
     return (
         <Routes>
 
             <Route
                 path="/login"
-                element={<Login />}
+                element={!isAuthenticated ? <Login /> : <Navigate to="/home" />}
             />
 
             <Route element={<ProtectedRoutes />}>

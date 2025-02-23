@@ -1,6 +1,6 @@
 function Sidebar() {
     return (
-        <div className="w-[250px] bg-red-400">
+        <div className="w-[230px] bg-red-400">
             Sidebar component
         </div>
     )
