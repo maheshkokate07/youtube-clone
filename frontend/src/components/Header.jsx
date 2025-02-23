@@ -30,7 +30,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
             <div className="flex">
                 <div className="flex items-center justify-center" onClick={() => setIsSidebarCompact(!isSidebarCompact)}>
-                    <PiListThin size={40} className="cursor-pointer font-extralight hover:bg-gray-100 rounded-full p-2" />
+                    <PiListThin size={40} className="cursor-pointer font-extralight hover:bg-gray-200 rounded-full p-2" />
                 </div>
                 <div className="h-full w-[120px] flex items-center justify-center">
                     <img width={120} src={youtubeLogo} className="cursor-pointer" alt="youtube-logo" />
@@ -46,7 +46,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                     className="p-4 w-[100%] rounded-s-full h-[40px] text-dark border border-gray-300"
                     required
                 />
-                <button className="bg-gray-100 h-[40px] border-r border-t border-b rounded-r-full border-gray-300 px-4">
+                <button className="bg-gray-100 h-[40px] border-r border-t border-b rounded-r-full border-gray-300 px-4 cursor-pointer hover:bg-gray-200">
                     <CiSearch size={24} />
                 </button>
             </div>

@@ -4,6 +4,8 @@ import CommonLayout from "../components/CommonLayout";
 import Home from "../pages/Home";
 import ProtectedRoutes from "./ProtectedRoutes";
 import { useSelector } from "react-redux";
+import Subscriptions from "../pages/Subscriptions";
+import Register from "../pages/Register";
 
 const AppRoutes = () => {
 
@@ -17,6 +19,11 @@ const AppRoutes = () => {
                 element={!isAuthenticated ? <Login /> : <Navigate to="/home" />}
             />
 
+            <Route
+                path="/register"
+                element={!isAuthenticated ? <Register /> : <Navigate to="/home" />}
+            />
+
             <Route element={<ProtectedRoutes />}>
 
                 <Route path="/" element={<Navigate to="/home" />} />
@@ -26,6 +33,15 @@ const AppRoutes = () => {
                     element={
                         <CommonLayout>
                             <Home />
+                        </CommonLayout>
+                    }
+                />
+
+                <Route
+                    path="/subscriptions"
+                    element={
+                        <CommonLayout>
+                            <Subscriptions />
                         </CommonLayout>
                     }
                 />
