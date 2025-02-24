@@ -21,7 +21,7 @@ function Sidebar({ isSidebarCompact }) {
     const location = useLocation();
 
     return (
-        <div className={`w-[${isSidebarCompact ? "75px" : "230px"}] transition-all duration-300 px-3 h-[calc(100vh-57px)] overflow-hidden`}>
+        <div style={{ width: isSidebarCompact ? "75px" : "230px" }} className={`transition-all ease-in-out duration-300 px-3 h-[calc(100vh-57px)] overflow-hidden`}>
             <ul className="py-2">
                 {navItems.map((item, index) => (
                     <div key={item.name}>
@@ -32,8 +32,8 @@ function Sidebar({ isSidebarCompact }) {
                                 </div>
                                 <span
                                     className={`whitespace-nowrap transition-all duration-200 ease-in-out ${isSidebarCompact
-                                            ? "opacity-0"
-                                            : "opacity-100"
+                                        ? "opacity-0"
+                                        : "opacity-100"
                                         }`}
                                 >
                                     {item.name}

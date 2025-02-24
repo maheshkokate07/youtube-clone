@@ -36,6 +36,26 @@ export const loginUser = createAsyncThunk(
     }
 )
 
+export const fetchUserProfile = createAsyncThunk(
+    "auth/fetchUserProfile",
+    async(_, {rejectWithValue}) => {
+        try {
+            const token = localStorage.getItem("token");
+            if(!token) {
+                return rejectWithValue("No token provided");
+            }
+
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/user/profile`, {
+                headers: { Authorization: `Bearer ${token}` }
+            })
+
+            return response?.data;
+        } catch (err) {
+            return rejectWithValue(err?.response?.data?.message || "Failed to fetch user profile")
+        }
+    }
+)
+
 const authSlice = createSlice({
     name: "auth",
     initialState: {
@@ -69,7 +89,6 @@ const authSlice = createSlice({
                 const {token, decodedToken} = action.payload;
                 if (token) localStorage.setItem("token", token);
                 state.user.token = token;
-                state.user.data = decodedToken;
                 state.user.isAuthenticated = true;
                 state.loading = false;
             })
@@ -78,6 +97,18 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.error = action.payload;
             })
+            .addCase(fetchUserProfile.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(fetchUserProfile.fulfilled, (state, action) => {
+                state.user.data = action.payload.user;
+                state.loading = false;
+            })
+            .addCase(fetchUserProfile.rejected, (state, action) => {
+                state.error = action.payload;
+                state.loading = false;
+            });
     }
 })
 

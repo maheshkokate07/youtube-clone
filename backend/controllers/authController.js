@@ -39,7 +39,7 @@ export const loginUser = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
     try {
-        const { userId } = req.params;
+        const { userId } = req.user;
 
         const user = await User.findById(userId).select("-password");
 

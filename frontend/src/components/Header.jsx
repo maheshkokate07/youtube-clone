@@ -4,9 +4,9 @@ import { CiSearch } from "react-icons/ci";
 import { PiListThin } from "react-icons/pi";
 import { PiUserCircleThin } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../store/slices/authSlice";
+import { fetchUserProfile, logout } from "../store/slices/authSlice";
 
 function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
@@ -23,6 +23,12 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
         setIsMenuOpen(!isMenuOpen);
     };
 
+    useEffect(() => {
+        if (isAuthenticated) {
+            dispatch(fetchUserProfile());
+        }
+    }, [isAuthenticated, dispatch]);
+
     return (
         <div className="w-full h-[57px] relative flex md:px-4 justify-between">
 
@@ -33,7 +39,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                     <PiListThin size={40} className="cursor-pointer font-extralight hover:bg-gray-200 rounded-full p-2" />
                 </div>
                 <div className="h-full w-[120px] flex items-center justify-center">
-                    <img width={120} src={youtubeLogo} className="cursor-pointer" alt="youtube-logo" />
+                    <img width={120} onClick={() => navigate("/home")} src={youtubeLogo} className="cursor-pointer" alt="youtube-logo" />
                 </div>
             </div>
             <div className="flex items-center md:w-[45%] justify-center">
@@ -52,8 +58,8 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
             </div>
             <div className="flex items-center justify-center gap-10 pe-2">
                 <div className="h-[37px] bg-gray-100 flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200 ">
-                    <span className="text-[35px] text-gray-500 pb-[7px]">+</span>
-                    <span className="text-[15px]">
+                    <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
+                    <span className="text-[14px] font-semibold">
                         {
                             channel ? "Upload Video" : "Create channal"
                         }
