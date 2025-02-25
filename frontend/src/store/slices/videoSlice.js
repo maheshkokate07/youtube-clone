@@ -20,6 +20,11 @@ const videoSlice = createSlice({
         loading: false,
         error: null
     },
+    reducers: {
+        resetVideos: (state) => {
+            state.videos = { videos: null };
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchVideos.pending, (state) => {
@@ -37,4 +42,5 @@ const videoSlice = createSlice({
     }
 });
 
+export const { resetVideos } = videoSlice.actions;
 export default videoSlice.reducer;

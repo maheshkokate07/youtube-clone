@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile, logout } from "../store/slices/authSlice";
+import { resetVideos } from "../store/slices/videoSlice";
 
 function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
     const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
     const userImg = "";
-    const channel = true;
     const { loading } = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -119,6 +119,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                                         className="block cursor-pointer w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
                                         onClick={() => {
                                             dispatch(logout());
+                                            dispatch(resetVideos())
                                             navigate("/login");
                                         }}
                                     >
