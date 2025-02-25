@@ -3,7 +3,6 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 
 function CommonLayout({ children }) {
-
     const [isSidebarCompact, setIsSidebarCompact] = useState(false);
 
     return (
@@ -11,10 +10,12 @@ function CommonLayout({ children }) {
             <Header isSidebarCompact={isSidebarCompact} setIsSidebarCompact={setIsSidebarCompact} />
             <div className="flex">
                 <Sidebar isSidebarCompact={isSidebarCompact} />
-                {children}
+                <div className="flex-1 transition-all duration-300">
+                    {children}
+                </div>
             </div>
         </div>
-    )
+    );
 }
 
 export default CommonLayout;

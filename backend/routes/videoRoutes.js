@@ -4,7 +4,7 @@ import { uploadVideoAndThumbnail } from "../middleware/upload.js";
 export default function videoRoutes(app) {
     app.post("/upload-video", uploadVideoAndThumbnail, uploadVideo);
     app.delete("/delete-video/:videoId", deleteVideo);
-    app.get("/videos", getAllVideos);
+    app.get("/api/videos", getAllVideos);
     app.get("/videos/:videoId", getVideoById);
 
     app.post("/like-video/:videoId", likeVideo);

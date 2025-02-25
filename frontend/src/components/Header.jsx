@@ -10,7 +10,7 @@ import { fetchUserProfile, logout } from "../store/slices/authSlice";
 
 function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
-    const { isAuthenticated } = useSelector(state => state.auth.user);
+    const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
     const userImg = "";
     const channel = true;
     const { loading } = useSelector((state) => state.auth);
@@ -22,6 +22,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+    console.log("User data => ", userData);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -61,7 +62,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                     <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
                     <span className="text-[14px] font-semibold">
                         {
-                            channel ? "Upload Video" : "Create channal"
+                            userData?.channel ? "Upload Video" : "Create channal"
                         }
                     </span>
                 </div>
@@ -88,20 +89,25 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
                             {isMenuOpen && (
                                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-lg rounded-md overflow-hidden z-50">
+                                    <div className="block w-full text-left px-4 py-2 border-b-1 border-gray-200">
+                                        <p className="font-semibold">{userData?.userName}</p>
+                                        <p className="text-blue-600 cursor-pointer"
+                                            onClick={() => {
+                                                userData?.channel ? navigate("/channel") : navigate("create-channel")
+                                            }}
+                                        >
+                                            {userData?.channel ? "View your channal" : "Create channel"}
+                                        </p>
+                                    </div>
+
                                     <button
                                         className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                                         onClick={() => navigate("/account")}
                                     >
                                         Your Account
                                     </button>
-                                    <button
-                                        className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                        onClick={() => channel ? navigate("/channel") : navigate("/create-channel")}
-                                    >
-                                        {channel ? "Your Channel" : "Create Channel"}
-                                    </button>
                                     {
-                                        channel &&
+                                        userData?.channel &&
                                         <button
                                             className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                                             onClick={() => navigate("upload-video")}
