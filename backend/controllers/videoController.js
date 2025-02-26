@@ -1,6 +1,7 @@
 import Channel from "../models/channelModel.js";
 import User from "../models/UserModel.js";
 import Video from "../models/videoModel.js";
+import cloudinary from "../config/cloudinary.js";
 
 export const uploadVideo = async (req, res) => {
     try {
@@ -25,11 +26,21 @@ export const uploadVideo = async (req, res) => {
         const videoUrl = videoFile.path;
         const thumbnailUrl = req.files["thumbnail"] ? req.files["thumbnail"][0].path : videoUrl.replace("/upload/", "/upload/w_300,h_200,so_1/f_jpg/");
 
+        const publicId = videoFile.filename;
+
+        const videoMetadata = await cloudinary.api.resource(publicId, {
+            resource_type: "video",
+            media_metadata: true
+        });
+
+        const duration = Math.floor(videoMetadata.duration);
+
         const newVideo = new Video({
             title,
             description,
             videoUrl,
             thumbnailUrl,
+            duration,
             uploader: uploaderId,
             channelId
         });
@@ -110,7 +121,7 @@ export const deleteVideo = async (req, res) => {
 export const getAllVideos = async (req, res) => {
     try {
         const { page = 1, limit = 10 } = req.query;
-        const videos = await Video.find().populate("channelId", "_id channelName")
+        const videos = await Video.find().populate("channelId", "_id channelName avatarUrl")
             .sort({ uploadDate: -1 })
             .skip((page - 1) * limit)
             .limit(Number(limit));

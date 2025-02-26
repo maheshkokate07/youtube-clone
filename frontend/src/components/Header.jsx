@@ -14,6 +14,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
     const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
     const userImg = "";
     const { loading } = useSelector((state) => state.auth);
+    const loadingVideos = useSelector((state) => state.videos.loading);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -22,7 +23,6 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
-    console.log("User data => ", userData);
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -33,7 +33,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
     return (
         <div className="w-full h-[57px] relative flex md:px-4 justify-between">
 
-            {loading && <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 animate-loading"></div>}
+            {(loading || loadingVideos) && <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 animate-loading"></div>}
 
             <div className="flex">
                 <div className="flex items-center justify-center" onClick={() => setIsSidebarCompact(!isSidebarCompact)}>
