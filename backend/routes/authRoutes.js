@@ -7,5 +7,5 @@ export default function authRoutes(app) {
     app.post("/api/user/login", loginUser);
 
     app.get("/api/user/profile", verifyToken, getUserProfile);
-    app.put("/api/user/update-profile/:userId", uploadUserAvatar, updateProfile);
+    app.put("/api/user/update-profile/:userId", verifyToken, uploadUserAvatar, updateProfile);
 } 

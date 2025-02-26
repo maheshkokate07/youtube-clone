@@ -13,7 +13,6 @@ import CreateChannelModal from "./CreateChannelModal";
 function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
     const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
-    const userImg = "";
     const { loading } = useSelector((state) => state.auth);
     const loadingVideos = useSelector((state) => state.videos.loading);
     const dispatch = useDispatch();
@@ -83,7 +82,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                                 className="flex items-center rounded-full justify-center cursor-pointer"
                             >
                                 <img
-                                    src={userImg ? userImg : user}
+                                    src={userData?.userAvatar ? userData?.userAvatar : user}
                                     width={34}
                                     alt="user-avatar"
                                     className="rounded-full"

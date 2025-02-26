@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
 
@@ -9,6 +9,15 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
     const [avatar, setAvatar] = useState(channel ? channel.avatarUrl : null);
     const [preview, setPreview] = useState(channel ? channel.avatarUrl : null);
     const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setChannelName(channel?.channelName || "");
+            setDescription(channel?.description || "");
+            setAvatar(channel?.avatarUrl || null);
+            setPreview(channel?.avatarUrl || null);
+        }
+    }, [isOpen, channel]);
 
     const dispatch = useDispatch();
 

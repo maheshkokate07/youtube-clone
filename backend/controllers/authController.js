@@ -56,6 +56,7 @@ export const getUserProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         const { userId } = req.params;
+        const { userName } = req.body;
 
         const user = await User.findById(userId);
 
@@ -73,6 +74,10 @@ export const updateProfile = async (req, res) => {
                 }
             }
             user.userAvatar = req.file.path;
+        }
+
+        if (userName) {
+            user.userName = userName;
         }
 
         await user.save();

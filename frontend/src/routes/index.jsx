@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Subscriptions from "../pages/Subscriptions";
 import Register from "../pages/Register";
 import Channel from "../pages/Channel";
+import Account from "../pages/Account";
 
 const AppRoutes = () => {
 
@@ -52,6 +53,15 @@ const AppRoutes = () => {
                     element={
                         <CommonLayout>
                             <Channel />
+                        </CommonLayout>
+                    }
+                />
+
+                <Route 
+                    path="/account"
+                    element={
+                        <CommonLayout>
+                            <Account />
                         </CommonLayout>
                     }
                 />
