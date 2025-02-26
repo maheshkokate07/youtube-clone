@@ -28,17 +28,21 @@ function VideoCard({ video }) {
             </Link>
 
             <div className="p-3 flex gap-3">
-                <div className="flex-shrink-0">
-                    <img
-                        src={video.channelId?.avatarUrl ? video.channelId.avatarUrl : user}
-                        alt="channel-avatar"
-                        className="w-10 h-10 rounded-full object-cover"
-                    />
-                </div>
+                {
+                    video.channelId?.avatarUrl && <div className="flex-shrink-0">
+                        <img
+                            src={video.channelId?.avatarUrl ? video.channelId.avatarUrl : user}
+                            alt="channel-avatar"
+                            className="w-10 h-10 rounded-full object-cover"
+                        />
+                    </div>
+                }
 
                 <div className="flex flex-col w-full">
                     <h3 className="text-lg font-semibold line-clamp-2">{video.title}</h3>
-                    <p className="text-sm text-gray-600">{video.channelId?.channelName || "Unknown Channel"}</p>
+                    {
+                        video.channelId?.channelName && <p className="text-sm text-gray-600">{video.channelId?.channelName || "Unknown Channel"}</p>
+                    }
                     <p className="text-sm text-gray-500">{video.views} views • {new Date(video.uploadDate).toDateString()}</p>
                 </div>
             </div>

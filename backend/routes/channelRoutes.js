@@ -4,7 +4,7 @@ import verifyToken from "../middleware/verifyToken.js";
 
 export default function channelRoutes(app) {
     app.post("/api/create-channel", verifyToken, uploadChannelAvatar, createChannel);
-    app.get("/channel/:channelId", getChannel);
-    app.put("/channel/update-channel/:channelId", uploadChannelAvatar, updateChannel);
+    app.get("/api/channel/:channelId", getChannel);
+    app.put("/api/channel/update-channel/:channelId", verifyToken, uploadChannelAvatar, updateChannel);
     app.post("/channel/subscribe/:channelId", subscribeChannel);
 }

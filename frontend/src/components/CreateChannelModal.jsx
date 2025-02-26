@@ -3,11 +3,11 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
 
-function CreateChannelModal({ isOpen, onClose }) {
-    const [channelName, setChannelName] = useState("");
-    const [description, setDescription] = useState("");
-    const [avatar, setAvatar] = useState(null);
-    const [preview, setPreview] = useState(null);
+function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannelData }) {
+    const [channelName, setChannelName] = useState(channel ? channel.channelName : "");
+    const [description, setDescription] = useState(channel ? channel?.description : "");
+    const [avatar, setAvatar] = useState(channel ? channel.avatarUrl : null);
+    const [preview, setPreview] = useState(channel ? channel.avatarUrl : null);
     const [isLoading, setIsLoading] = useState(false);
 
     const dispatch = useDispatch();
@@ -38,11 +38,25 @@ function CreateChannelModal({ isOpen, onClose }) {
             headers: { Authorization: `Bearer ${token}` }
         }
 
+        let apiEndPoint = "";
+
+        if (isEditting) {
+            apiEndPoint = `${import.meta.env.VITE_API_URL}/api/channel/update-channel/${userData?.channel}`
+        } else {
+            apiEndPoint = `${import.meta.env.VITE_API_URL}/api/create-channel`
+        }
+
         try {
             setIsLoading(true);
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/create-channel`, formData, config);
-            console.log(response);
+            if (isEditting) {
+                const response = await axios.put(apiEndPoint, formData, config);
+            } else {
+                const response = await axios.post(apiEndPoint, formData, config);
+            }
             dispatch(fetchUserProfile());
+            if (isEditting) {
+                fetchChannelData();
+            }
         } catch (err) {
             console.log(err);
         } finally {
@@ -57,7 +71,11 @@ function CreateChannelModal({ isOpen, onClose }) {
     return (
         <div className={`fixed inset-0 z-100 flex items-center justify-center backdrop-blur-xs`} onClick={onClose}>
             <div className="bg-white w-[400px] p-5 rounded-lg shadow-lg" onClick={(e) => e.stopPropagation()}>
-                <h2 className="text-xl font-bold mb-4">Create Your Channel</h2>
+                <h2 className="text-xl font-bold mb-4">
+                    {
+                        isEditting ? "Edit channel" : "Create Your Channel"
+                    }
+                </h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
 
                     <div className="flex flex-col items-center">
@@ -101,7 +119,7 @@ function CreateChannelModal({ isOpen, onClose }) {
                         <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-300 rounded-md cursor-pointer">Cancel</button>
                         <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer">
                             {
-                                isLoading ? "Loading..." : "Create"
+                                isLoading ? "Loading..." : isEditting ? "Update" : "Create"
                             }
                         </button>
                     </div>

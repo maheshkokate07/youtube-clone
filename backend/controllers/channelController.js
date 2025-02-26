@@ -115,7 +115,7 @@ export const getChannel = async (req, res) => {
     try {
         const { channelId } = req.params;
 
-        const channel = await Channel.findById(channelId);
+        const channel = await Channel.findById(channelId).populate("videos", "_id title thumbnailUrl duration views uploadDate");
 
         if (!channel) {
             return res.status(404).json({ message: "Channel not found" })

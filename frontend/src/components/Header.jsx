@@ -96,7 +96,8 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                                         <p className="font-semibold">{userData?.userName}</p>
                                         <p className="text-blue-600 cursor-pointer"
                                             onClick={() => {
-                                                userData?.channel ? navigate("/channel") : navigate("create-channel")
+                                                userData?.channel ? navigate(`/channel/${userData?.channel}`) : setIsModalOpen(true)
+                                                setIsMenuOpen(false);
                                             }}
                                         >
                                             {userData?.channel ? "View your channal" : "Create channel"}
@@ -105,7 +106,10 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
                                     <button
                                         className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                        onClick={() => navigate("/account")}
+                                        onClick={() => {
+                                            navigate("/account")
+                                            setIsMenuOpen(false);
+                                        }}
                                     >
                                         Your Account
                                     </button>
@@ -113,7 +117,10 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                                         userData?.channel &&
                                         <button
                                             className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                            onClick={() => navigate("upload-video")}
+                                            onClick={() => {
+                                                navigate("upload-video")
+                                                setIsMenuOpen(false);
+                                            }}
                                         >
                                             Upload Video
                                         </button>
@@ -136,6 +143,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
             <CreateChannelModal
                 isOpen={isModalOpen}
+                isEditting={false}
                 onClose={() => setIsModalOpen(false)}
             />
         </div>
