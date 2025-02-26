@@ -8,6 +8,7 @@ import Subscriptions from "../pages/Subscriptions";
 import Register from "../pages/Register";
 import Channel from "../pages/Channel";
 import Account from "../pages/Account";
+import UploadVideo from "../pages/UploadVideo";
 
 const AppRoutes = () => {
 
@@ -62,6 +63,15 @@ const AppRoutes = () => {
                     element={
                         <CommonLayout>
                             <Account />
+                        </CommonLayout>
+                    }
+                />
+
+                <Route 
+                    path="/upload-video"
+                    element={
+                        <CommonLayout>
+                            <UploadVideo />
                         </CommonLayout>
                     }
                 />

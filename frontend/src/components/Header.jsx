@@ -62,7 +62,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
             <div className="flex items-center justify-center gap-10 pe-2">
                 <div className="h-[37px] bg-gray-100 flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200" onClick={() => !userData.channel ? setIsModalOpen(true) : ""}>
                     <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
-                    <span className="text-[14px] font-semibold">
+                    <span className="text-[14px] font-semibold" onClick={() => {userData?.channel ? navigate("/upload-video") : setIsModalOpen(true)}}>
                         {
                             userData?.channel ? "Upload Video" : "Create channal"
                         }
@@ -117,7 +117,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                                         <button
                                             className="block cursor-pointer w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
                                             onClick={() => {
-                                                navigate("upload-video")
+                                                navigate("/upload-video")
                                                 setIsMenuOpen(false);
                                             }}
                                         >
