@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchUserProfile, logout } from "../store/slices/authSlice";
 import { resetVideos } from "../store/slices/videoSlice";
+import CreateChannelModal from "./CreateChannelModal";
 
 function Header({ isSidebarCompact, setIsSidebarCompact }) {
 
@@ -19,6 +20,8 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
     const navigate = useNavigate();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -58,7 +61,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                 </button>
             </div>
             <div className="flex items-center justify-center gap-10 pe-2">
-                <div className="h-[37px] bg-gray-100 flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200 ">
+                <div className="h-[37px] bg-gray-100 flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200" onClick={() => !userData.channel ? setIsModalOpen(true) : ""}>
                     <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
                     <span className="text-[14px] font-semibold">
                         {
@@ -130,7 +133,12 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                         </div>
                 }
             </div>
-        </div >
+
+            <CreateChannelModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
+        </div>
     )
 }
 
