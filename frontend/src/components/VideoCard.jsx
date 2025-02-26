@@ -21,7 +21,7 @@ function VideoCard({ video }) {
                 </div>
 
                 {video.duration && (
-                    <span className="absolute bottom-2 right-2 bg-black text-white text-xs font-semibold px-2 py-1 rounded">
+                    <span className="absolute bottom-2 right-2 bg-black opacity-80 text-white text-xs font-semibold px-2 py-1 rounded">
                         {formatDuration(video?.duration)}
                     </span>
                 )}

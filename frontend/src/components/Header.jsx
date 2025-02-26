@@ -83,9 +83,8 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                             >
                                 <img
                                     src={userData?.userAvatar ? userData?.userAvatar : user}
-                                    width={34}
                                     alt="user-avatar"
-                                    className="rounded-full"
+                                    className="rounded-full object-cover w-10 h-10"
                                 />
                             </div>
 
