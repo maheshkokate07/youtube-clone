@@ -67,7 +67,7 @@ export const getVideoById = async (req, res) => {
             videoId,
             { $inc: { views: 1 } },
             { new: true }
-        ).populate("channelId", "_id channelName avatarUrl");
+        ).populate("channelId", "_id channelName avatarUrl subscribers");
 
         if (!video) {
             return res.status(404).json({ message: "Video not found" });

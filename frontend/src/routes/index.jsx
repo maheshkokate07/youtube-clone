@@ -9,6 +9,7 @@ import Register from "../pages/Register";
 import Channel from "../pages/Channel";
 import Account from "../pages/Account";
 import UploadVideo from "../pages/UploadVideo";
+import WatchVideo from "../pages/WatchVideo";
 
 const AppRoutes = () => {
 
@@ -72,6 +73,15 @@ const AppRoutes = () => {
                     element={
                         <CommonLayout>
                             <UploadVideo />
+                        </CommonLayout>
+                    }
+                />
+
+                <Route 
+                    path="/watch/:videoId"
+                    element={
+                        <CommonLayout>
+                            <WatchVideo />
                         </CommonLayout>
                     }
                 />

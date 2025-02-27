@@ -6,5 +6,5 @@ export default function channelRoutes(app) {
     app.post("/api/create-channel", verifyToken, uploadChannelAvatar, createChannel);
     app.get("/api/channel/:channelId", getChannel);
     app.put("/api/channel/update-channel/:channelId", verifyToken, uploadChannelAvatar, updateChannel);
-    app.post("/channel/subscribe/:channelId", subscribeChannel);
+    app.post("/api/channel/subscribe/:channelId", subscribeChannel);
 }

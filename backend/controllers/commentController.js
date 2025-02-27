@@ -32,12 +32,14 @@ export const getCommentsByVideo = async (req, res) => {
 
         const video = await Video.findById(videoId).populate({
             path: "comments",
-            populate: { path: "userId", select: "userName" }
+            options: { sort: { timestamp: -1 } },
+            populate: { path: "userId", select: "userName userAvatar" }
         })
 
-        if (!video || !video.comments.length) {
-            return res.status(404).json({ message: "No comments found for this video" });
+        if (!video) {
+            return res.status(404).json({ message: "No video found" });
         }
+
         res.status(200).json({ success: true, message: "Comments fetched successfully", data: video.comments });
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message });

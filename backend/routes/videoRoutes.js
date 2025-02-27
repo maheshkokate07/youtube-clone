@@ -6,10 +6,10 @@ export default function videoRoutes(app) {
     app.post("/api/upload-video", verifyToken, uploadVideoAndThumbnail, uploadVideo);
     app.delete("/delete-video/:videoId", deleteVideo);
     app.get("/api/videos", getAllVideos);
-    app.get("/videos/:videoId", getVideoById);
+    app.get("/api/videos/:videoId", getVideoById);
 
-    app.post("/like-video/:videoId", likeVideo);
-    app.post("/dislike-video/:videoId", dislikeVideo);
+    app.post("/api/like-video/:videoId", likeVideo);
+    app.post("/api/dislike-video/:videoId", dislikeVideo);
 
     app.get("/channel/videos/:channelId", getChannelVideos);
     app.get("/videos/search", searchVideo)

@@ -11,7 +11,7 @@ function VideoCard({ video }) {
 
     return (
         <div className="w-full overflow-hidden transition duration-300 cursor-pointer">
-            <Link to={`/video/${video._id}`} className="relative">
+            <Link to={`/watch/${video._id}`} className="relative">
                 <div className="w-full rounded-lg overflow-hidden aspect-video bg-gray-200">
                     <img
                         src={video.thumbnailUrl}
