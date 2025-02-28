@@ -44,6 +44,15 @@ function Comments({ videoId }) {
         }
     };
 
+    const handleDeleteComment = async (commentId) => {
+        try {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-comment/${commentId}`);
+            fetchComments();
+        } catch (err) {
+            console.log("Error deleting comment", err);
+        }
+    }
+
     return (
         <div className="mt-4">
             <h3 className="text-xl font-bold mb-2">{totalComments} Comments</h3>
@@ -74,7 +83,7 @@ function Comments({ videoId }) {
             </div>
 
             {
-                comments.length === 0 && <div>No comments</div>
+                comments.length === 0 && <div className="mt-2 font-semibold">No comments</div>
             }
             <ul className="mt-4 space-y-2">
                 {comments?.map((comment) => (
@@ -92,7 +101,7 @@ function Comments({ videoId }) {
                         </div>
                         <div className="flex items-center justify-center">
                             {
-                                (comment?.userId?._id === userData._id) && <MdDeleteSweep size={40} color="#545454" className="cursor-pointer hover:bg-gray-200 rounded-full p-2" />
+                                (comment?.userId?._id === userData._id) && <MdDeleteSweep size={40} color="#ff333d" className="cursor-pointer hover:bg-gray-200 rounded-full p-2" onClick={() => handleDeleteComment(comment._id)} />
                             }
                         </div>
                     </li>

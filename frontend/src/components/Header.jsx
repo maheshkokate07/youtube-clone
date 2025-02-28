@@ -10,7 +10,7 @@ import { fetchUserProfile, logout } from "../store/slices/authSlice";
 import { resetVideos } from "../store/slices/videoSlice";
 import CreateChannelModal from "./CreateChannelModal";
 
-function Header({ isSidebarCompact, setIsSidebarCompact }) {
+function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTerm }) {
 
     const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
     const { loading } = useSelector((state) => state.auth);
@@ -50,8 +50,8 @@ function Header({ isSidebarCompact, setIsSidebarCompact }) {
                     type="text"
                     name="searchTerm"
                     placeholder="Search"
-                    // value={""}
-                    // onChange={""}
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                     className="p-4 w-[100%] rounded-s-full h-[40px] text-dark border border-gray-300"
                     required
                 />

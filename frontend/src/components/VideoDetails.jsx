@@ -4,11 +4,13 @@ import axios from "axios";
 import user from "../assets/user.svg"
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
+import { useNavigate } from "react-router-dom";
 
 function VideoDetails({ video }) {
     const [likes, setLikes] = useState(video.likes?.length);
     const [dislikes, setDislikes] = useState(video.dislikes?.length);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const { data: userData, token } = useSelector(state => state.auth.user);
 
@@ -71,19 +73,18 @@ function VideoDetails({ video }) {
             <h2 className="text-xl font-bold">{video.title}</h2>
 
             <div className="flex items-center gap-3 mt-3">
-                <div className="flex-shrink-0">
+                <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
                     <img
                         src={video.channelId?.avatarUrl ? video.channelId.avatarUrl : user}
                         alt="channel-avatar"
                         className="w-12 h-12 rounded-full object-cover"
                     />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
                     {
                         video.channelId?.channelName && <p className="text-[17px] font-semibold">{video.channelId?.channelName || "Unknown Channel"}</p>
                     }
                     <p className="text-[15px] text-gray-600">{totalSubscribers} subscribers</p>
-
                 </div>
                 <div className="ml-1">
                     <button

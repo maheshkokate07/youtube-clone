@@ -42,7 +42,7 @@ function WatchVideo() {
 
             {/* Right Section (Recommended Videos) */}
             <div className="w-full lg:w-[30%]">
-                {/* <SuggestedVideos /> */}
+                <SuggestedVideos currentVideoId={video._id} />
             </div>
         </div>
     );

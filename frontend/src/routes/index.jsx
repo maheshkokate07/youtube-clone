@@ -36,7 +36,7 @@ const AppRoutes = () => {
                     path="/home"
                     element={
                         <CommonLayout>
-                            <Home />
+                            {({searchTerm}) => <Home searchTerm={searchTerm} />}
                         </CommonLayout>
                     }
                 />

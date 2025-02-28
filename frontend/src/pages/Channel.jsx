@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import userImg from "../assets/user.svg";
 import VideoCard from "../components/VideoCard";
 import { MdEdit } from "react-icons/md";
 import CreateChannelModal from "../components/CreateChannelModal";
+import { fetchUserProfile } from "../store/slices/authSlice";
 
 function Channel() {
     const { channelId } = useParams();
@@ -14,13 +15,18 @@ function Channel() {
     const [channel, setChannel] = useState(null);
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isSubscribed, setIsSubscribed] = useState(userData?.subscribedChannels?.includes(channelId));
+    const [totalSubscribers, setTotalSubscribers] = useState(0);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const dispatch = useDispatch();
 
     const fetchChannelData = async () => {
         try {
             const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/channel/${channelId}`);
             setChannel(data?.data);
+            setTotalSubscribers(data?.data?.subscribers?.length);
             setVideos(data?.data?.videos);
             setLoading(false);
         } catch (err) {
@@ -35,8 +41,19 @@ function Channel() {
         fetchChannelData();
     }, [channelId]);
 
-    const handleSubscribe = () => {
-
+    const handleSubscribe = async () => {
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${channelId}`, { userId: userData._id });
+            dispatch(fetchUserProfile());
+            if (isSubscribed) {
+                setTotalSubscribers(totalSubscribers - 1);
+            } else {
+                setTotalSubscribers(totalSubscribers + 1);
+            }
+            setIsSubscribed(!isSubscribed);
+        } catch (err) {
+            console.log("Error subscribing channel", err)
+        }
     };
 
     if (loading) return <p className="mt-50 text-center font-semibold text-lg">Loading...</p>;
@@ -48,7 +65,7 @@ function Channel() {
                 <div className="flex gap-4">
                     <div>
                         <h1 className="text-2xl font-bold">{channel.channelName}</h1>
-                        <p className="text-gray-500">{channel.subscribers.length} Subscribers</p>
+                        <p className="text-gray-500">{totalSubscribers} Subscribers</p>
                         <p className="text-gray-700">{channel.description}</p>
                     </div>
                     {
@@ -61,10 +78,9 @@ function Channel() {
                 {
                     (userData.channel !== channelId) && <button
                         onClick={handleSubscribe}
-                        className={`px-4 py-2 rounded-lg text-white font-semibold ${channel.isSubscribed ? "bg-gray-500" : "bg-red-500"
-                            }`}
+                        className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
                     >
-                        {channel.isSubscribed ? "Unsubscribe" : "Subscribe"}
+                        {isSubscribed ? "Unsubscribe" : "Subscribe"}
                     </button>
                 }
             </div>
