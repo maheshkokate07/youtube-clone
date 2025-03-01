@@ -4,21 +4,23 @@ import { SiYoutubeshorts } from "react-icons/si";
 import { BiLike } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-
-const navItems = [
-    { name: "Home", icon: <IoMdHome size={25} />, path: "/home" },
-    { name: "Shorts", icon: <SiYoutubeshorts size={23} />, path: "/" },
-    { name: "Subscriptions", icon: <MdSubscriptions size={22} />, path: "/subscriptions" },
-    { name: "History", icon: <MdHistory size={25} />, path: "/" },
-    { name: "Playlists", icon: <MdPlaylistPlay size={26} />, path: "/" },
-    { name: "Your videos", icon: <MdOutlineSmartDisplay size={22} />, path: "/channel" },
-    { name: "Watch later", icon: <MdOutlineWatchLater size={24} />, path: "/" },
-    { name: "Liked videos", icon: <BiLike size={24} />, path: "/" },
-];
+import { useSelector } from "react-redux";
 
 function Sidebar({ isSidebarCompact }) {
 
+    const { data: userData } = useSelector(state => state?.auth?.user);
     const location = useLocation();
+
+    const navItems = [
+        { name: "Home", accessor:"/home" ,icon: <IoMdHome size={25} />, path: "/home" },
+        { name: "Shorts", accessor:"/shots", icon: <SiYoutubeshorts size={23} />, path: "/home" },
+        { name: "Subscriptions", accessor:"/subscriptions", icon: <MdSubscriptions size={22} />, path: "/subscriptions" },
+        { name: "History", accessor:"/history", icon: <MdHistory size={25} />, path: "/home" },
+        { name: "Playlists", accessor:"/playlist", icon: <MdPlaylistPlay size={26} />, path: "/home" },
+        userData?.channel && { name: "Your videos", accessor:"/channel", icon: <MdOutlineSmartDisplay size={22} />, path: `/channel/${userData?.channel}` },
+        { name: "Watch later", accessor:"/watch-later", icon: <MdOutlineWatchLater size={24} />, path: "/home" },
+        { name: "Liked videos", accessor:"/liked", icon: <BiLike size={24} />, path: "/home" },
+    ].filter(Boolean);
 
     return (
         <div style={{ width: isSidebarCompact ? "75px" : "230px" }} className={`transition-all ease-in-out duration-300 px-3 h-[calc(100vh-57px)] overflow-hidden`}>
@@ -26,7 +28,7 @@ function Sidebar({ isSidebarCompact }) {
                 {navItems.map((item, index) => (
                     <div key={item.name}>
                         <li>
-                            <Link to={item.path} className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${location.pathname === item.path ? "bg-gray-100" : ""}`}>
+                            <Link to={item.path} className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${location.pathname.includes(item.accessor) ? "bg-gray-100" : ""}`}>
                                 <div className="w-[17%]">
                                     {item.icon}
                                 </div>

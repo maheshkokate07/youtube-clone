@@ -11,7 +11,7 @@ function SuggestedVideos({ currentVideoId }) {
             <h3 className="text-lg font-bold">Recommended</h3>
             {videos?.filter(video => video._id !== currentVideoId)?.map((video) => (
                 <Link to={`/watch/${video._id}`} key={video._id} className="flex gap-2">
-                    <img src={video.thumbnailUrl} className="w-24 h-16 object-cover rounded-md" alt="thumbnail" />
+                    <img src={video.thumbnailUrl} className="w-32 h-18 object-cover rounded-md" alt="thumbnail" />
                     <div>
                         <h4 className="text-sm font-semibold">{video.title}</h4>
                         <p className="text-xs text-gray-600">{video.channelId.channelName}</p>

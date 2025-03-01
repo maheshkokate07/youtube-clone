@@ -27,12 +27,12 @@ function WatchVideo() {
         fetchVideo();
     }, [videoId]);
 
-    if (loading) return <p className="text-center">Loading...</p>;
-    if (error) return <p className="text-center text-red-500">{error}</p>;
-    if (!video) return <p className="text-center text-gray-500">Video not found</p>;
+    if (loading) return <p className="text-center text-md mt-3 mb-5 w-full font-semibold">Loading...</p>;
+    if (error) return <p className="text-center text-md mt-3 mb-5 w-full font-semibold text-red-500">{error}</p>;
+    if (!video) return <p className="text-center text-md mt-3 mb-5 w-full font-semibold text-gray-500">Video not found</p>;
 
     return (
-        <div className="flex flex-col lg:flex-row gap-6 px-4 py-4">
+        <div className="flex flex-col lg:flex-row gap-6 px-4 py-2 w-full h-[calc(100vh-57px)] overflow-auto">
             {/* Left Section (Video, Details, Comments) */}
             <div className="w-full lg:w-[70%] flex flex-col gap-4">
                 <VideoPlayer video={video} />
