@@ -2,8 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import user from "../assets/user.svg";
 import { useSelector } from "react-redux";
 import { MdDeleteSweep } from "react-icons/md";
+import axios from "axios";
+import { useState } from "react";
+import ConfirmationModal from "./ConfirmationModal";
 
-function VideoCard({ video }) {
+function VideoCard({ video, showDelete, fetchChannelData }) {
 
     function formatDuration(durationInSeconds) {
         const minutes = Math.floor(durationInSeconds / 60);
@@ -11,9 +14,30 @@ function VideoCard({ video }) {
         return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
     }
 
+    const [loading, setLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [deleteId, setDeleteId] = useState("");
+
     const navigate = useNavigate();
 
-    const { data: userData } = useSelector(state => state.auth?.user);
+    const { data: userData, token } = useSelector(state => state.auth?.user);
+
+    const handleDeleteVideo = async () => {
+        if (!deleteId) return;
+        try {
+            setLoading(true);
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            }
+
+            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-video/${deleteId}`, config);
+            fetchChannelData();
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="w-full overflow-hidden transition duration-300 cursor-pointer">
@@ -31,6 +55,14 @@ function VideoCard({ video }) {
                         {formatDuration(video?.duration)}
                     </span>
                 )}
+
+                {
+                    loading && (
+                        <span className="absolute h-full top-0 w-full bg-gray-200 opacity-80 text-black font-semibold rounded flex items-center justify-center">
+                            Deleting your video...
+                        </span>
+                    )
+                }
             </Link>
 
             <div className="p-3 flex gap-3">
@@ -53,10 +85,23 @@ function VideoCard({ video }) {
                 </div>
                 <div className="flex">
                     {
-                        userData?._id === video?.uploader && <MdDeleteSweep size={40} color="#ff333d" className="cursor-pointer hover:bg-gray-200 rounded-full p-2" />
+                        (showDelete && userData?._id === video?.uploader) &&
+                        <MdDeleteSweep size={40} color="#ff333d" className="cursor-pointer hover:bg-gray-200 rounded-full p-2"
+                            onClick={() => {
+                                setIsModalOpen(true);
+                                setDeleteId(video._id);
+                            }}
+                        />
                     }
                 </div>
             </div>
+
+            <ConfirmationModal
+                isOpen={isModalOpen}
+                message={"Do you want to delete this video?"}
+                onClose={() => { setIsModalOpen(false) }}
+                callbackFunction={handleDeleteVideo}
+            />
         </div>
     );
 }

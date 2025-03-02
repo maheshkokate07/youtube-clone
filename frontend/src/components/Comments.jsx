@@ -3,6 +3,7 @@ import axios from "axios";
 import user from "../assets/user.svg"
 import { useSelector } from "react-redux";
 import { MdDeleteSweep } from "react-icons/md";
+import ConfirmationModal from "./ConfirmationModal";
 
 function Comments({ videoId }) {
     const [comments, setComments] = useState([]);
@@ -55,7 +56,9 @@ function Comments({ videoId }) {
 
     return (
         <div className="mt-4">
-            <h3 className="text-xl font-bold mb-2">{totalComments} Comments</h3>
+            {
+                comments.length !== 0 && <h3 className="text-xl font-bold mb-2">{totalComments} Comments</h3>
+            }
 
             <div className="flex gap-2">
                 <div className="flex-shrink-0">
@@ -74,7 +77,8 @@ function Comments({ videoId }) {
                         onChange={(e) => setNewComment(e.target.value)}
                     />
                     <button
-                        className="bg-blue-500 text-white px-4 h-10 py-2 rounded-md hover:bg-blue-600 cursor-pointer"
+                        disabled={!newComment}
+                        className={`bg-blue-500 text-white px-4 h-10 py-2 rounded-md hover:bg-blue-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
                         onClick={handleCommentSubmit}
                     >
                         {loading ? "Adding..." : "Comment"}

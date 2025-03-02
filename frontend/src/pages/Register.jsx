@@ -25,7 +25,7 @@ const Register = () => {
             }
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/register`, payload, config);
             setIsLoading(false);
-            navigate("/home");
+            navigate("/login");
         } catch (err) {
             console.log(err);
         } finally {
@@ -34,7 +34,7 @@ const Register = () => {
     };
 
     return (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex px-4 items-center justify-center h-screen">
             <div className="bg-gray-100 p-6 rounded-lg shadow-lg w-96">
                 <h2 className="text-2xl text-dark font-bold text-center mb-4">Register</h2>
 

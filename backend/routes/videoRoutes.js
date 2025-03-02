@@ -4,7 +4,7 @@ import verifyToken from "../middleware/verifyToken.js";
 
 export default function videoRoutes(app) {
     app.post("/api/upload-video", verifyToken, uploadVideoAndThumbnail, uploadVideo);
-    app.delete("/delete-video/:videoId", deleteVideo);
+    app.delete("/api/delete-video/:videoId", verifyToken, deleteVideo);
     app.get("/api/videos", getAllVideos);
     app.get("/api/videos/:videoId", getVideoById);
 

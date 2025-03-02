@@ -3,13 +3,15 @@ import { MdSubscriptions, MdOutlineSmartDisplay, MdOutlineWatchLater, MdHistory,
 import { SiYoutubeshorts } from "react-icons/si";
 import { BiLike } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
 import { useSelector } from "react-redux";
+import { useLayout } from "../context/LayoutContext.jsx";
 
-function Sidebar({ isSidebarCompact }) {
+function Sidebar() {
 
     const { data: userData } = useSelector(state => state?.auth?.user);
     const location = useLocation();
+
+    const {isSidebarCompact} = useLayout();
 
     const navItems = [
         { name: "Home", accessor:"/home" ,icon: <IoMdHome size={25} />, path: "/home" },

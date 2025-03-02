@@ -1,44 +1,38 @@
 import { useEffect, useState } from "react";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
+import { Outlet } from "react-router-dom";
+import { useLayout } from "../context/LayoutContext.jsx";
 
-function CommonLayout({ children }) {
-    const [isSidebarCompact, setIsSidebarCompact] = useState(false);
-    const [searchTerm, setSearchTerm] = useState("");
+function CommonLayout() {
+
+    const { isSidebarCompact, setIsSidebarCompact } = useLayout();
     const [screenWidth, setScreenWidth] = useState("");
 
     useEffect(() => {
-
         const handleResize = () => {
-            setIsSidebarCompact(window.innerWidth < 1200);
+            setIsSidebarCompact(window.innerWidth < 1280);
             setScreenWidth(window.innerWidth);
         }
 
         handleResize();
-
         window.addEventListener("resize", handleResize);
-
         return () => window.removeEventListener("resize", handleResize)
 
     }, [])
 
     return (
         <div className="relative h-screen">
-            <Header
-                isSidebarCompact={isSidebarCompact}
-                setIsSidebarCompact={setIsSidebarCompact}
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-            />
+            <Header />
 
             <div
                 className={`fixed top-[67] left-0 h-full bg-white transition-all duration-300 z-50`}
             >
-                <Sidebar isSidebarCompact={isSidebarCompact} />
+                <Sidebar />
             </div>
 
-            <div className={`flex-1 transition-all duration-300 ${!isSidebarCompact ? "opacity-75" : ""} ${screenWidth < 1200 ? "ml-[75px]" : (screenWidth > 1100 && isSidebarCompact) ? "ml-[75px] opacity-100" : "ml-[230px] opacity-100"}`}>
-                {children && typeof children === "function" ? children({ searchTerm }) : children}
+            <div className={`flex-1 transition-all duration-300 ${!isSidebarCompact ? "opacity-75" : ""} ${screenWidth < 1280 ? "ml-[75px]" : (screenWidth > 1280 && isSidebarCompact) ? "ml-[75px] opacity-100" : "ml-[230px] opacity-100"}`}>
+                <Outlet />
             </div>
         </div>
     );

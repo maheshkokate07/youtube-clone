@@ -7,6 +7,7 @@ import VideoCard from "../components/VideoCard";
 import { MdEdit } from "react-icons/md";
 import CreateChannelModal from "../components/CreateChannelModal";
 import { fetchUserProfile } from "../store/slices/authSlice";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 function Channel() {
     const { channelId } = useParams();
@@ -88,7 +89,7 @@ function Channel() {
             <h2 className="text-xl font-semibold my-6">Uploaded Videos</h2>
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 {videos.length > 0 ? (
-                    videos.map((video) => <VideoCard key={video._id} video={video} />)
+                    videos.map((video) => <VideoCard key={video._id} video={video} showDelete={true} fetchChannelData={fetchChannelData} />)
                 ) : (
                     <p className="col-span-full text-center text-gray-500">No videos uploaded yet.</p>
                 )}
@@ -107,6 +108,7 @@ function Channel() {
                 }}
                 fetchChannelData={fetchChannelData}
             />
+
         </div>
     );
 }

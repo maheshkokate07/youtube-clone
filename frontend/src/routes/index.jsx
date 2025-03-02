@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "../pages/Login";
 import CommonLayout from "../components/CommonLayout";
 import Home from "../pages/Home";
@@ -28,63 +28,53 @@ const AppRoutes = () => {
                 element={!isAuthenticated ? <Register /> : <Navigate to="/home" />}
             />
 
-            <Route element={<ProtectedRoutes />}>
+            <Route element={<CommonLayout />}>
 
                 <Route path="/" element={<Navigate to="/home" />} />
-
                 <Route
                     path="/home"
                     element={
-                        <CommonLayout>
-                            {({searchTerm}) => <Home searchTerm={searchTerm} />}
-                        </CommonLayout>
+                        <Home />
                     }
                 />
 
-                <Route
-                    path="/subscriptions"
-                    element={
-                        <CommonLayout>
+                <Route element={<ProtectedRoutes />}>
+
+                    <Route
+                        path="/subscriptions"
+                        element={
                             <Subscriptions />
-                        </CommonLayout>
-                    }
-                />
+                        }
+                    />
 
-                <Route
-                    path="/channel/:channelId"
-                    element={
-                        <CommonLayout>
+                    <Route
+                        path="/channel/:channelId"
+                        element={
                             <Channel />
-                        </CommonLayout>
-                    }
-                />
+                        }
+                    />
 
-                <Route 
-                    path="/account"
-                    element={
-                        <CommonLayout>
+                    <Route
+                        path="/account"
+                        element={
                             <Account />
-                        </CommonLayout>
-                    }
-                />
+                        }
+                    />
 
-                <Route 
-                    path="/upload-video"
-                    element={
-                        <CommonLayout>
+                    <Route
+                        path="/upload-video"
+                        element={
                             <UploadVideo />
-                        </CommonLayout>
-                    }
-                />
+                        }
+                    />
 
-                <Route 
-                    path="/watch/:videoId"
-                    element={
-                        <CommonLayout>
+                    <Route
+                        path="/watch/:videoId"
+                        element={
                             <WatchVideo />
-                        </CommonLayout>
-                    }
-                />
+                        }
+                    />
+                </Route>
             </Route>
 
             <Route path="*" element={<Navigate to="/home" />} />

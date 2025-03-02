@@ -9,8 +9,10 @@ import { useNavigate } from "react-router-dom";
 import { fetchUserProfile, logout } from "../store/slices/authSlice";
 import { resetVideos } from "../store/slices/videoSlice";
 import CreateChannelModal from "./CreateChannelModal";
+import ConfirmationModal from "./ConfirmationModal";
+import { useLayout } from "../context/LayoutContext.jsx";
 
-function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTerm }) {
+function Header() {
 
     const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
     const { loading } = useSelector((state) => state.auth);
@@ -18,13 +20,21 @@ function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTe
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const {isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTerm} = useLayout();
 
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
+
+    const handleLogout = () => {
+        dispatch(logout());
+        window.location.reload();
+    }
 
     useEffect(() => {
         if (isAuthenticated) {
@@ -33,7 +43,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTe
     }, [isAuthenticated, dispatch]);
 
     return (
-        <div className="w-full h-[57px] relative flex md:px-4 justify-between">
+        <div className="w-full h-[57px] relative flex px-4 justify-between">
 
             {(loading || loadingVideos) && <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 animate-loading"></div>}
 
@@ -41,11 +51,11 @@ function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTe
                 <div className="flex items-center justify-center" onClick={() => setIsSidebarCompact(!isSidebarCompact)}>
                     <PiListThin size={40} className="cursor-pointer font-extralight hover:bg-gray-200 rounded-full p-2" />
                 </div>
-                <div className="h-full w-[120px] flex items-center justify-center">
+                <div className="h-full hidden w-[120px] sm:flex items-center justify-center">
                     <img width={120} onClick={() => navigate("/home")} src={youtubeLogo} className="cursor-pointer" alt="youtube-logo" />
                 </div>
             </div>
-            <div className="flex items-center md:w-[45%] justify-center">
+            <div className="flex items-center me-2 sm:me-0 w-[70%] sm:w-[35%] md:w-[45%] justify-center">
                 <input
                     type="text"
                     name="searchTerm"
@@ -59,21 +69,21 @@ function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTe
                     <CiSearch size={24} />
                 </button>
             </div>
-            <div className="flex items-center justify-center gap-10 pe-2">
-                <div className="h-[37px] bg-gray-100 flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200" onClick={() => !userData.channel ? setIsModalOpen(true) : ""}>
+            <div className="flex items-center justify-center gap-3 lg:gap-10 pe-2">
+                {isAuthenticated && <div className="hidden h-[37px] bg-gray-100 sm:flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200" onClick={() => !userData.channel ? setIsModalOpen(true) : ""}>
                     <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
-                    <span className="text-[14px] font-semibold" onClick={() => {userData?.channel ? navigate("/upload-video") : setIsModalOpen(true)}}>
+                    <span className="text-[14px] font-semibold" onClick={() => { userData?.channel ? navigate("/upload-video") : setIsModalOpen(true) }}>
                         {
                             userData?.channel ? "Upload Video" : "Create channal"
                         }
                     </span>
-                </div>
+                </div>}
                 {
                     !isAuthenticated ?
-                        <div className="flex items-center justify-center gap-1 border border-gray-200 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-blue-100 hover:border-blue-100">
+                        <div className="flex items-center justify-center gap-1 border border-gray-200 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-blue-100 hover:border-blue-100" onClick={() => navigate("/login")}>
                             <PiUserCircleThin size={24} color="blue" />
                             <span className="font-semibold text-[15px] text-blue-700">
-                                Sign in
+                                Signin
                             </span>
                         </div> :
                         <div className="relative">
@@ -125,11 +135,7 @@ function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTe
                                     }
                                     <button
                                         className="block cursor-pointer w-full text-left px-4 py-2 text-red-600 hover:bg-red-100"
-                                        onClick={() => {
-                                            dispatch(logout());
-                                            dispatch(resetVideos())
-                                            navigate("/login");
-                                        }}
+                                        onClick={() => setIsConfirmOpen(true)}
                                     >
                                         Logout
                                     </button>
@@ -143,6 +149,13 @@ function Header({ isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTe
                 isOpen={isModalOpen}
                 isEditting={false}
                 onClose={() => setIsModalOpen(false)}
+            />
+
+            <ConfirmationModal
+                isOpen={isConfirmOpen}
+                message={"Do you want to logout?"}
+                onClose={() => { setIsConfirmOpen(false) }}
+                callbackFunction={handleLogout}
             />
         </div>
     )
