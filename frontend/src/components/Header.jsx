@@ -12,15 +12,18 @@ import CreateChannelModal from "./CreateChannelModal";
 import ConfirmationModal from "./ConfirmationModal";
 import { useLayout } from "../context/LayoutContext.jsx";
 
+// Header component
 function Header() {
 
+    // Extract is user authenticated or not and userData
     const { isAuthenticated, data: userData } = useSelector(state => state.auth.user);
     const { loading } = useSelector((state) => state.auth);
     const loadingVideos = useSelector((state) => state.videos.loading);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    const {isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTerm} = useLayout();
+    // Extract states from custom useLayout context
+    const { isSidebarCompact, setIsSidebarCompact, searchTerm, setSearchTerm } = useLayout();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -36,6 +39,7 @@ function Header() {
         window.location.reload();
     }
 
+    // If user is logged in fetch user profile
     useEffect(() => {
         if (isAuthenticated) {
             dispatch(fetchUserProfile());
@@ -45,6 +49,7 @@ function Header() {
     return (
         <div className="w-full h-[57px] relative flex px-4 justify-between">
 
+            {/* Show loader line like youtube when loading */}
             {(loading || loadingVideos) && <div className="absolute top-0 left-0 w-full h-[2px] bg-red-500 animate-loading"></div>}
 
             <div className="flex">
@@ -55,6 +60,8 @@ function Header() {
                     <img width={120} onClick={() => navigate("/home")} src={youtubeLogo} className="cursor-pointer" alt="youtube-logo" />
                 </div>
             </div>
+
+            {/* Search input */}
             <div className="flex items-center me-2 sm:me-0 w-[70%] sm:w-[35%] md:w-[45%] justify-center">
                 <input
                     type="text"
@@ -69,15 +76,21 @@ function Header() {
                     <CiSearch size={24} />
                 </button>
             </div>
+
             <div className="flex items-center justify-center gap-3 lg:gap-10 pe-2">
-                {isAuthenticated && <div className="hidden h-[37px] bg-gray-100 sm:flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200" onClick={() => !userData.channel ? setIsModalOpen(true) : ""}>
-                    <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
-                    <span className="text-[14px] font-semibold" onClick={() => { userData?.channel ? navigate("/upload-video") : setIsModalOpen(true) }}>
-                        {
-                            userData?.channel ? "Upload Video" : "Create channal"
-                        }
-                    </span>
-                </div>}
+                {/* If user is logged in and not have channel then show create channel either show upload video  */}
+                {
+                    isAuthenticated && <div className="hidden h-[37px] bg-gray-100 sm:flex items-center justify-center gap-1 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-gray-200" onClick={() => !userData.channel ? setIsModalOpen(true) : ""}>
+                        <span className="text-[32px] text-gray-500 pb-[7px]">+</span>
+                        <span className="text-[14px] font-semibold" onClick={() => { userData?.channel ? navigate("/upload-video") : setIsModalOpen(true) }}>
+                            {
+                                userData?.channel ? "Upload Video" : "Create channal"
+                            }
+                        </span>
+                    </div>
+                }
+
+                {/* If not logged in show signin button either show profile */}
                 {
                     !isAuthenticated ?
                         <div className="flex items-center justify-center gap-1 border border-gray-200 cursor-pointer rounded-full ps-2 pe-3 py-1 hover:bg-blue-100 hover:border-blue-100" onClick={() => navigate("/login")}>
@@ -145,12 +158,14 @@ function Header() {
                 }
             </div>
 
+            {/* Create channel modal */}
             <CreateChannelModal
                 isOpen={isModalOpen}
                 isEditting={false}
                 onClose={() => setIsModalOpen(false)}
             />
 
+            {/* Confirmation modal for confirm logout */}
             <ConfirmationModal
                 isOpen={isConfirmOpen}
                 message={"Do you want to logout?"}

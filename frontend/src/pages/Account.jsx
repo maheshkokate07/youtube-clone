@@ -4,6 +4,7 @@ import { fetchUserProfile } from "../store/slices/authSlice";
 import userImg from "../assets/user.svg";
 import axios from "axios";
 
+// Account page
 function Account() {
     const dispatch = useDispatch();
     const { data: userData, token } = useSelector(state => state.auth.user);
@@ -57,9 +58,9 @@ function Account() {
             <div className="flex flex-col items-center">
 
                 <label className="relative cursor-pointer">
-                {
-                   isEditing && <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
-                }
+                    {
+                        isEditing && <input type="file" accept="image/*" onChange={handleFileChange} className="hidden" />
+                    }
                     <div className="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center">
                         {preview || userData?.userAvatar ? (
                             <img src={preview || userData.userAvatar} alt="Profile" className="w-full h-full object-cover" />
@@ -69,7 +70,7 @@ function Account() {
                     </div>
                 </label>
                 {
-                isEditing && <p className="text-sm text-gray-500 mt-2">Click to change profile picture</p>
+                    isEditing && <p className="text-sm text-gray-500 mt-2">Click to change profile picture</p>
                 }
 
                 <div className="w-full mt-5">

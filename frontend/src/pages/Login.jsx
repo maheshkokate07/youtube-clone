@@ -23,9 +23,11 @@ const Login = () => {
             return;
         }
 
+        // Dispatch loginUser slice
         const result = await dispatch(loginUser(credentials));
         if (result.payload?.token) {
-            navigate("/home"); // Redirect to home after successful login
+            // Redirect to home after successful login
+            navigate("/home");
         }
     };
 

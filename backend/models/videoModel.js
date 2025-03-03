@@ -5,6 +5,7 @@ import cloudinary from "../config/cloudinary.js";
 
 const User = mongoose.models.User;
 
+// Video model
 const videoSchema = new mongoose.Schema({
     title: {
         type: String,

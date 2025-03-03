@@ -3,36 +3,46 @@ import User from "../models/UserModel.js";
 import Video from "../models/videoModel.js";
 import cloudinary from "../config/cloudinary.js";
 
+// Controller for upload video
 export const uploadVideo = async (req, res) => {
     try {
         const { title, description, uploaderId, channelId } = req.body;
 
+        // Check if user is exist who uploaded the video
         const user = await User.findById(uploaderId);
         if (!user) {
             return res.status(404).json({ message: "User not found" })
         }
 
+        // Check channel exist
         const channel = await Channel.findById(channelId);
         if (!channel) {
             return res.status(404).json({ message: "Channel not found" })
         }
 
+        // Get video file
         const videoFile = req.files["video"][0];
 
         if (!videoFile) {
             return res.status(400).json({ message: "No video file provided" })
         }
 
+        // Set video Url getting
         const videoUrl = videoFile.path;
+
+        // If the thumbnail is not provided for the video then set a custom thumbnail that is the snapshot of the video as a image
         const thumbnailUrl = req.files["thumbnail"] ? req.files["thumbnail"][0].path : videoUrl.replace("/upload/", "/upload/w_300,h_200,so_1/f_jpg/");
 
+        // Get publicId of video
         const publicId = videoFile.filename;
 
+        // Get the video Metadata from cloudinary of the uploaded video
         const videoMetadata = await cloudinary.api.resource(publicId, {
             resource_type: "video",
             media_metadata: true
         });
 
+        // Set duration for the video that we get from video metadata from cloudinary
         const duration = Math.floor(videoMetadata.duration);
 
         const newVideo = new Video({
@@ -47,9 +57,11 @@ export const uploadVideo = async (req, res) => {
 
         await newVideo.save();
 
+        // Push videoId in user's uploadedVideos array who uploaded video
         user.uplodedVideos.push(newVideo._id);
         await user.save();
 
+        // Push videoId in channel's video array to identify the channel videos
         channel.videos.push(newVideo._id);
         await channel.save();
 
@@ -59,14 +71,19 @@ export const uploadVideo = async (req, res) => {
     }
 }
 
+// Get video by its id
 export const getVideoById = async (req, res) => {
     try {
         const { videoId } = req.params;
 
+        // Logic for update the video view when this controller called
         const video = await Video.findByIdAndUpdate(
             videoId,
+            // Increment the video views by 1
             { $inc: { views: 1 } },
+            // Return the new updated video
             { new: true }
+            // Populate channelId of video to get channelId, name avatar and subscribers 
         ).populate("channelId", "_id channelName avatarUrl subscribers");
 
         if (!video) {
@@ -80,11 +97,13 @@ export const getVideoById = async (req, res) => {
     }
 }
 
+// Controller for get channel videos
 export const getChannelVideos = async (req, res) => {
     try {
         const { channelId } = req.params;
         // const { page = 1, limit = 10 } = req.query;
 
+        // Find the videos that has channelId ad requested, sort by latest
         const videos = await Video.find({ channelId })
             .select("_id title thumbnailUrl views uploadDate")
             .sort({ uploadDate: -1 })
@@ -102,6 +121,7 @@ export const getChannelVideos = async (req, res) => {
     }
 }
 
+// Controller for delete video
 export const deleteVideo = async (req, res) => {
     try {
         const { videoId } = req.params;
@@ -118,6 +138,7 @@ export const deleteVideo = async (req, res) => {
     }
 }
 
+// Controller for get all videos
 export const getAllVideos = async (req, res) => {
     try {
         // const { page = 1, limit = 10 } = req.query;
@@ -137,10 +158,12 @@ export const getAllVideos = async (req, res) => {
     }
 }
 
+// Search video not implemented currently
 export const searchVideo = async (req, res) => {
     try {
         const { searchTerm, page = 1, limit = 10 } = req.query;
 
+        // Match searchTerm either in title or in description with pagination
         const videos = await Video.find({
             $or: [
                 { title: { $regex: searchTerm, $options: "i" } },
@@ -172,6 +195,7 @@ export const searchVideo = async (req, res) => {
     }
 }
 
+// Controller for like video
 export const likeVideo = async (req, res) => {
     try {
         const { videoId } = req.params;
@@ -183,10 +207,12 @@ export const likeVideo = async (req, res) => {
             return res.status(404).json({ message: "Video not found" });
         }
 
+        // If user already liked then remove like either like
         const likeAction = video.likes.includes(userId)
             ? { $pull: { likes: userId } }
             : { $addToSet: { likes: userId } }
 
+        // Remove from dislike and use likeAction
         const updatedVideo = await Video.findByIdAndUpdate(videoId, {
             $pull: { dislikes: userId },
             ...likeAction
@@ -198,6 +224,7 @@ export const likeVideo = async (req, res) => {
     }
 }
 
+// Controller for dislike video
 export const dislikeVideo = async (req, res) => {
     try {
         const { videoId } = req.params;
@@ -209,10 +236,12 @@ export const dislikeVideo = async (req, res) => {
             return res.status(404).json({ message: "No video found" });
         }
 
+        // If already disliked remove dislike either add dislike
         const dislikeAction = video.dislikes.includes(userId)
             ? { $pull: { dislikes: userId } }
             : { $addToSet: { dislikes: userId } }
 
+        // If liked then remove like and add dislike
         const updatedVideo = await Video.findByIdAndUpdate(videoId, {
             $pull: { likes: userId },
             ...dislikeAction

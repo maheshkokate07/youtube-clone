@@ -4,6 +4,7 @@ import videoReducer from "./slices/videoSlice"
 import {persistReducer, persistStore} from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
+// config persist root to persist to persist our store after reload
 const persistConfig = {
     key: "youtube-root",
     storage

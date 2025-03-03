@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// Slice for fetch videos
 export const fetchVideos = createAsyncThunk(
     "videos/fetchVideos",
     async (_, { rejectWithValue }) => {
@@ -15,12 +16,15 @@ export const fetchVideos = createAsyncThunk(
 
 const videoSlice = createSlice({
     name: "videos",
+
+    // Initial state for vidoes in redux
     initialState: {
         videos: [],
         loading: false,
         error: null
     },
     reducers: {
+        // On reset video set videos empty in state
         resetVideos: (state) => {
             state.videos = { videos: null };
         }

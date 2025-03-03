@@ -7,8 +7,8 @@ import VideoCard from "../components/VideoCard";
 import { MdEdit } from "react-icons/md";
 import CreateChannelModal from "../components/CreateChannelModal";
 import { fetchUserProfile } from "../store/slices/authSlice";
-import ConfirmationModal from "../components/ConfirmationModal";
 
+// Channel page
 function Channel() {
     const { channelId } = useParams();
 
@@ -23,6 +23,7 @@ function Channel() {
 
     const dispatch = useDispatch();
 
+    // Fetch channel data for id we get from params
     const fetchChannelData = async () => {
         try {
             const { data } = await axios.get(`${import.meta.env.VITE_API_URL}/api/channel/${channelId}`);
@@ -42,6 +43,7 @@ function Channel() {
         fetchChannelData();
     }, [channelId]);
 
+    // Function for handling subscribe
     const handleSubscribe = async () => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${channelId}`, { userId: userData._id });
@@ -76,6 +78,7 @@ function Channel() {
                     }
                 </div>
 
+                {/* Only show subscribe button when user is not owner of that channel */}
                 {
                     (userData.channel !== channelId) && <button
                         onClick={handleSubscribe}
@@ -108,7 +111,6 @@ function Channel() {
                 }}
                 fetchChannelData={fetchChannelData}
             />
-
         </div>
     );
 }

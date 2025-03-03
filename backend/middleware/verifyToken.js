@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../models/UserModel.js";
 
+// Custom middleware for verify the JWT token
 const verifyToken = async (req, res, next) => {
     let token;
 

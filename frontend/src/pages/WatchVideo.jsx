@@ -6,12 +6,14 @@ import VideoDetails from "../components/VideoDetails";
 import SuggestedVideos from "../components/SuggestedVideos";
 import Comments from "../components/Comments";
 
+// Watch video page
 function WatchVideo() {
     const { videoId } = useParams();
     const [video, setVideo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+    // Fetch video 
     useEffect(() => {
         const fetchVideo = async () => {
             try {

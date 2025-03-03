@@ -6,6 +6,7 @@ function ProtectedRoutes() {
 
     if (isAuthenticated === undefined) return null;
 
+    // If user is not logged in then navigate to login either outlet
     return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />
 }
 

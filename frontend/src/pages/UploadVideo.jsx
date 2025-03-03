@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+// Upload video page
 function UploadVideo() {
     const navigate = useNavigate();
 
@@ -53,6 +54,8 @@ function UploadVideo() {
             if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
 
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload-video`, formData, config);
+            
+            // Navigate home after video upload
             navigate("/home");
         } catch (err) {
             console.log(err)
@@ -70,12 +73,14 @@ function UploadVideo() {
 
                     <div>
                         <label className="block font-medium">Select Video *</label>
+                        {/* Preview for selected video */}
                         {(videoFile && previewVideo) && <video className="mt-2 w-[200px] rounded-lg" src={previewVideo} controls />}
                         <input type="file" name="video" accept="video/*" onChange={handleFileChange} className="mt-2 border border-gray-200 p-2 w-full rounded-md cursor-pointer" required />
                     </div>
 
                     <div>
                         <label className="block font-medium">Upload Thumbnail (Optional)</label>
+                        {/* Preview for selected thumbnail */}
                         {(thumbnailFile && previewThumbnail) && <img className="mt-2 w-[200px] object-cover rounded-lg" src={previewThumbnail} alt="Thumbnail Preview" />}
                         <input type="file" name="thumbnail" accept="image/*" onChange={handleFileChange} className="mt-2 border border-gray-200 p-2 w-full rounded-md cursor-pointer" />
                     </div>

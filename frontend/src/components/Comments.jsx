@@ -3,8 +3,8 @@ import axios from "axios";
 import user from "../assets/user.svg"
 import { useSelector } from "react-redux";
 import { MdDeleteSweep } from "react-icons/md";
-import ConfirmationModal from "./ConfirmationModal";
 
+// Comments component for showing comments down the video
 function Comments({ videoId }) {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState("");
@@ -13,6 +13,7 @@ function Comments({ videoId }) {
 
     const { data: userData, token } = useSelector(state => state.auth.user);
 
+    // Function for fetching comments for a video
     const fetchComments = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/comments/${videoId}`);
@@ -24,10 +25,12 @@ function Comments({ videoId }) {
         }
     };
 
+    // Runs when page mounts or video changed
     useEffect(() => {
         fetchComments();
     }, [videoId]);
 
+    // Function for Add comment
     const handleCommentSubmit = async () => {
         try {
             setLoading(true);
@@ -37,6 +40,8 @@ function Comments({ videoId }) {
                 text: newComment
             });
             setNewComment("");
+
+            // Fetch comments again when the comment added
             fetchComments();
         } catch (err) {
             console.error("Error adding comment", err);
@@ -45,9 +50,12 @@ function Comments({ videoId }) {
         }
     };
 
+    // Function for delete comment
     const handleDeleteComment = async (commentId) => {
         try {
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-comment/${commentId}`);
+
+            // Fetch comments again when the comment deleted
             fetchComments();
         } catch (err) {
             console.log("Error deleting comment", err);
@@ -56,6 +64,8 @@ function Comments({ videoId }) {
 
     return (
         <div className="mt-4">
+
+            {/* Show Comment count */}
             {
                 comments.length !== 0 && <h3 className="text-xl font-bold mb-2">{totalComments} Comments</h3>
             }
@@ -63,6 +73,7 @@ function Comments({ videoId }) {
             <div className="flex gap-2">
                 <div className="flex-shrink-0">
                     <img
+                        // Show user avatar if available either show default user image
                         src={userData?.userAvatar ? userData?.userAvatar : user}
                         alt="channel-avatar"
                         className="w-12 h-12 rounded-full object-cover"
@@ -100,10 +111,12 @@ function Comments({ videoId }) {
                             />
                         </div>
                         <div className="w-full">
+                            {/* Convert the comments timestamp in locale string */}
                             <p className="text-sm text-gray-600">@{comment.userId.userName}<span className="pl-2">{(new Date(comment?.timestamp).toLocaleString("en-IN"))}</span></p>
                             <p className="text-md">{comment.text}</p>
                         </div>
                         <div className="flex items-center justify-center">
+                            {/* Show delete comment button only when the comment is done by that user by matching its user id */}
                             {
                                 (comment?.userId?._id === userData._id) && <MdDeleteSweep size={40} color="#ff333d" className="cursor-pointer hover:bg-gray-200 rounded-full p-2" onClick={() => handleDeleteComment(comment._id)} />
                             }

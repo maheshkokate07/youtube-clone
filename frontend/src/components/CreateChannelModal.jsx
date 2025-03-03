@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
 
+// Modal for create channel
 function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannelData }) {
     const [channelName, setChannelName] = useState(channel ? channel.channelName : "");
     const [description, setDescription] = useState(channel ? channel?.description : "");
@@ -10,6 +11,10 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
     const [preview, setPreview] = useState(channel ? channel.avatarUrl : null);
     const [isLoading, setIsLoading] = useState(false);
 
+    const { data: userData, token } = useSelector(state => state.auth.user);
+    const dispatch = useDispatch();
+
+    // Reset states
     useEffect(() => {
         if (isOpen) {
             setChannelName(channel?.channelName || "");
@@ -19,10 +24,7 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
         }
     }, [isOpen, channel]);
 
-    const dispatch = useDispatch();
-
-    const { data: userData, token } = useSelector(state => state.auth.user);
-
+    // Onchange for for handling
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -31,6 +33,7 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
         }
     };
 
+    // Handle submit function for create channel
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!channelName) return alert("Channel name is required!");
@@ -49,6 +52,7 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
 
         let apiEndPoint = "";
 
+        // Check that we are editing the channel or adding the channel to select the API endpoint according to that
         if (isEditting) {
             apiEndPoint = `${import.meta.env.VITE_API_URL}/api/channel/update-channel/${userData?.channel}`
         } else {
@@ -62,8 +66,12 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
             } else {
                 const response = await axios.post(apiEndPoint, formData, config);
             }
+            
+            // Fetch user pofile again when we create or edit channel
             dispatch(fetchUserProfile());
+            
             if (isEditting) {
+                // Fetch channel data again if we edited channel
                 fetchChannelData();
             }
         } catch (err) {

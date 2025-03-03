@@ -2,6 +2,7 @@ import { createChannel, getChannel, subscribeChannel, updateChannel } from "../c
 import { uploadChannelAvatar } from "../middleware/upload.js";
 import verifyToken from "../middleware/verifyToken.js";
 
+// Channel routes
 export default function channelRoutes(app) {
     app.post("/api/create-channel", verifyToken, uploadChannelAvatar, createChannel);
     app.get("/api/channel/:channelId", getChannel);

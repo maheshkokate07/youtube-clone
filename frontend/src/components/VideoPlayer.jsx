@@ -1,3 +1,4 @@
+// Video player component
 function VideoPlayer({ video }) {
     return (
         <div className="w-full">

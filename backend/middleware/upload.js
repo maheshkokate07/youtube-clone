@@ -2,6 +2,7 @@ import multer from "multer";
 import { CloudinaryStorage } from "multer-storage-cloudinary";
 import cloudinary from "../config/cloudinary.js";
 
+// Storage setup for video in cloudinary
 const videoStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
@@ -11,6 +12,7 @@ const videoStorage = new CloudinaryStorage({
     }
 });
 
+// Storage for video thumbnail in cloudinary
 const thumbnailStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
@@ -20,6 +22,7 @@ const thumbnailStorage = new CloudinaryStorage({
     }
 });
 
+// Channel avatar storage
 const channelAvatarStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
@@ -29,6 +32,7 @@ const channelAvatarStorage = new CloudinaryStorage({
     }
 })
 
+// User avatar storage
 const userAvatarStorage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
@@ -38,6 +42,7 @@ const userAvatarStorage = new CloudinaryStorage({
     }
 })
 
+// Select custom storage for either video or eithe thumnbail because we adding video and thumbnail in single api
 const customStorage = {
     _handleFile: function (req, file, cb) {
         let storage;
@@ -60,10 +65,12 @@ export const uploadVideoAndThumbnail = multer({
     { name: "thumbnail", maxCount: 1 },
 ]);
 
+// Multer instance for upload channel avatar
 export const uploadChannelAvatar = multer({
     storage: channelAvatarStorage,
 }).single("channelAvatar")
 
+// Multer instance for upload user avatar
 export const uploadUserAvatar = multer({
     storage: userAvatarStorage,
 }).single("userAvatar");

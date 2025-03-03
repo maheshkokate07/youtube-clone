@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Channel model
 const channelSchema = new mongoose.Schema({
     channelName: {
         type: String,

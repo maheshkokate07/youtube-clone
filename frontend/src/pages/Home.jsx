@@ -11,34 +11,20 @@ function Home() {
     const { loading, error } = useSelector(state => state.videos);
     const [selectedFilter, setSelectedFilter] = useState("All");
 
-    const {searchTerm, isSidebarCompact} = useLayout();
+    const { searchTerm, isSidebarCompact } = useLayout();
 
-    const filters = [
-        "All",
-        "Trending",
-        "Coding",
-        "React",
-        "Javascript",
-        "Node",
-        "MongoDB",
-        "Programming",
-        "SQL",
-        "Database",
-        "Tailwind",
-        "CSS",
-        "C++",
-        "Animation",
-        "MySQL",
-        "Express"
-    ]
+    // Filters array
+    const filters = ["All", "Trending", "Coding", "React", "Javascript", "Node", "MongoDB", "Programming", "SQL", "Database", "Tailwind", "CSS", "C++", "Animation", "MySQL", "Express"]
 
     useEffect(() => {
+        // Dispatch the fetchVideos slice
         dispatch(fetchVideos());
     }, [dispatch]);
 
     useEffect(() => {
         let updatedVideos = videos;
 
+        // Filter videos based on searchTerm
         if (searchTerm) {
             updatedVideos = updatedVideos.filter(video =>
                 video?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,6 +32,7 @@ function Home() {
             );
         }
 
+        // Filter videos based on selected filter
         if (selectedFilter !== "All") {
             updatedVideos = updatedVideos.filter(video =>
                 video?.title?.toLowerCase().includes(selectedFilter.toLowerCase()) ||

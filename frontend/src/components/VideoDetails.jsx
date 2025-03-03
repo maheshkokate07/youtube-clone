@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
 
+// Video Details component
 function VideoDetails({ video }) {
     const [likes, setLikes] = useState(video.likes?.length);
     const [dislikes, setDislikes] = useState(video.dislikes?.length);
@@ -14,17 +15,20 @@ function VideoDetails({ video }) {
 
     const { data: userData, token } = useSelector(state => state.auth.user);
 
+    // Check if user subscribed to the channel
     const [isSubscribed, setIsSubscribed] = useState(userData?.subscribedChannels?.includes(video.channelId?._id));
     const [isLiked, setIsLiked] = useState(video.likes?.includes(userData._id));
     const [isDisliked, setIsDisliked] = useState(video.dislikes?.includes(userData._id));
     const [totalSubscribers, setTotalSubscribers] = useState(video?.channelId?.subscribers.length);
 
+    // Function for handle like
     const handleLike = async () => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/like-video/${video._id}`, { userId: userData._id });
             setLikes(response?.data?.likes);
             setDislikes(response?.data?.dislikes);
 
+            // Handle like and dislike states locally avoiding API call after like update
             if (isLiked) {
                 setIsLiked(false);
             } else {
@@ -36,6 +40,7 @@ function VideoDetails({ video }) {
         }
     };
 
+    // Function for dislike
     const handleDislike = async () => {
         try {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/dislike-video/${video._id}`, { userId: userData._id });
@@ -53,10 +58,13 @@ function VideoDetails({ video }) {
         }
     };
 
+    // Function for subscribing the channel
     const handleSubscribe = async () => {
         try {
             await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${video.channelId?._id}`, { userId: userData._id });
             dispatch(fetchUserProfile());
+
+            // Handle subscribed and count state locally to avoid API call when subscribe or unsubscribe 
             if (isSubscribed) {
                 setTotalSubscribers(totalSubscribers - 1);
             } else {

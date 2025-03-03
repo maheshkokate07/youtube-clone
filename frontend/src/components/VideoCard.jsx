@@ -6,8 +6,10 @@ import axios from "axios";
 import { useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
 
+// Video card component
 function VideoCard({ video, showDelete, fetchChannelData }) {
 
+    // Format duration function
     function formatDuration(durationInSeconds) {
         const minutes = Math.floor(durationInSeconds / 60);
         const seconds = durationInSeconds % 60;
@@ -22,6 +24,7 @@ function VideoCard({ video, showDelete, fetchChannelData }) {
 
     const { data: userData, token } = useSelector(state => state.auth?.user);
 
+    // Function for delete video
     const handleDeleteVideo = async () => {
         if (!deleteId) return;
         try {
@@ -31,6 +34,8 @@ function VideoCard({ video, showDelete, fetchChannelData }) {
             }
 
             const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-video/${deleteId}`, config);
+
+            // Fetch channel data again after deleting video
             fetchChannelData();
         } catch (err) {
             console.log(err);
@@ -83,6 +88,8 @@ function VideoCard({ video, showDelete, fetchChannelData }) {
                     }
                     <p className="text-sm text-gray-500">{video.views} views • {new Date(video.uploadDate).toDateString()}</p>
                 </div>
+
+                {/* Show delete button only when the channel belongs to user or uploaded by that user */}
                 <div className="flex">
                     {
                         (showDelete && userData?._id === video?.uploader) &&
@@ -96,6 +103,7 @@ function VideoCard({ video, showDelete, fetchChannelData }) {
                 </div>
             </div>
 
+            {/* Confirm video delete modal */}
             <ConfirmationModal
                 isOpen={isModalOpen}
                 message={"Do you want to delete this video?"}

@@ -2,6 +2,7 @@ import { deleteVideo, dislikeVideo, getAllVideos, getChannelVideos, getVideoById
 import { uploadVideoAndThumbnail } from "../middleware/upload.js";
 import verifyToken from "../middleware/verifyToken.js";
 
+// Video routes
 export default function videoRoutes(app) {
     app.post("/api/upload-video", verifyToken, uploadVideoAndThumbnail, uploadVideo);
     app.delete("/api/delete-video/:videoId", verifyToken, deleteVideo);
@@ -12,5 +13,5 @@ export default function videoRoutes(app) {
     app.post("/api/dislike-video/:videoId", dislikeVideo);
 
     app.get("/channel/videos/:channelId", getChannelVideos);
-    app.get("/videos/search", searchVideo)
+    app.get("/videos/search", searchVideo);
 }

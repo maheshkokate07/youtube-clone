@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+// Comment model
 const commentSchema = new mongoose.Schema({
     videoId: {
         type: mongoose.Schema.Types.ObjectId,

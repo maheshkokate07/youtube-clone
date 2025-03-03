@@ -4,11 +4,13 @@ import Sidebar from "./Sidebar";
 import { Outlet } from "react-router-dom";
 import { useLayout } from "../context/LayoutContext.jsx";
 
+// Common layout
 function CommonLayout() {
 
     const { isSidebarCompact, setIsSidebarCompact } = useLayout();
     const [screenWidth, setScreenWidth] = useState("");
 
+    // Set screen width to handle responsiveness
     useEffect(() => {
         const handleResize = () => {
             setIsSidebarCompact(window.innerWidth < 1280);
@@ -18,13 +20,11 @@ function CommonLayout() {
         handleResize();
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize)
-
     }, [])
 
     return (
         <div className="relative h-screen">
             <Header />
-
             <div
                 className={`fixed top-[67] left-0 h-full bg-white transition-all duration-300 z-50`}
             >

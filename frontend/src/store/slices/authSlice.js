@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { decodeToken } from "../../../utils/decodeJwt.js";
 
+// Slice for loginUser
 export const loginUser = createAsyncThunk(
     "auth/loginUser",
 
@@ -18,6 +19,7 @@ export const loginUser = createAsyncThunk(
 
             if (!token) return rejectWithValue("Invalid token received from server");
 
+            // Decode token
             const decodedToken = decodeToken(token);
 
             if (decodedToken) {
@@ -36,12 +38,13 @@ export const loginUser = createAsyncThunk(
     }
 )
 
+// Slice for fetch user profile
 export const fetchUserProfile = createAsyncThunk(
     "auth/fetchUserProfile",
-    async(_, {rejectWithValue}) => {
+    async (_, { rejectWithValue }) => {
         try {
             const token = localStorage.getItem("token");
-            if(!token) {
+            if (!token) {
                 return rejectWithValue("No token provided");
             }
 
@@ -58,6 +61,8 @@ export const fetchUserProfile = createAsyncThunk(
 
 const authSlice = createSlice({
     name: "auth",
+
+    // Redux initial state for auth
     initialState: {
         user: {
             token: null,
@@ -68,6 +73,7 @@ const authSlice = createSlice({
         error: null
     },
 
+    // Logout reducer - clear redux state after logout
     reducers: {
         logout: (state) => {
             state.user.isAuthenticated = false;
@@ -85,8 +91,9 @@ const authSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
+            // login fulfilled store the user token and data in redux state
             .addCase(loginUser.fulfilled, (state, action) => {
-                const {token, decodedToken} = action.payload;
+                const { token, decodedToken } = action.payload;
                 if (token) localStorage.setItem("token", token);
                 state.user.token = token;
                 state.user.isAuthenticated = true;
@@ -112,5 +119,5 @@ const authSlice = createSlice({
     }
 })
 
-export const {logout} = authSlice.actions;
+export const { logout } = authSlice.actions;
 export default authSlice.reducer;

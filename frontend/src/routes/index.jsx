@@ -17,7 +17,7 @@ const AppRoutes = () => {
 
     return (
         <Routes>
-
+            {/* If already login then navigate to home instead of login */}
             <Route
                 path="/login"
                 element={!isAuthenticated ? <Login /> : <Navigate to="/home" />}
@@ -28,6 +28,7 @@ const AppRoutes = () => {
                 element={!isAuthenticated ? <Register /> : <Navigate to="/home" />}
             />
 
+            {/* Wrap in common layout */}
             <Route element={<CommonLayout />}>
 
                 <Route path="/" element={<Navigate to="/home" />} />
@@ -38,6 +39,7 @@ const AppRoutes = () => {
                     }
                 />
 
+                {/* Wrap in protected routes */}
                 <Route element={<ProtectedRoutes />}>
 
                     <Route
@@ -77,6 +79,7 @@ const AppRoutes = () => {
                 </Route>
             </Route>
 
+            {/* Navigate unknown paths to home */}
             <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
     )

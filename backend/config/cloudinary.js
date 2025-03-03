@@ -1,3 +1,5 @@
+// Cloudinary config file for use cloudinary
+
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from "dotenv";
 
