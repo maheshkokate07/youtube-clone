@@ -16,18 +16,20 @@ function Home() {
     const filters = [
         "All",
         "Trending",
-        "Rashmika",
-        "Music",
         "Coding",
         "React",
         "Javascript",
         "Node",
         "MongoDB",
         "Programming",
-        "Gaming",
-        "Comedy",
-        "Entertainment",
-        "Cricket"
+        "SQL",
+        "Database",
+        "Tailwind",
+        "CSS",
+        "C++",
+        "Animation",
+        "MySQL",
+        "Express"
     ]
 
     useEffect(() => {

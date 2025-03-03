@@ -90,7 +90,7 @@ function UploadVideo() {
                         <textarea className="w-full mt-2 p-2 border border-gray-300 rounded-md" placeholder="Enter video description" value={description} onChange={(e) => setDescription(e.target.value)} rows="3" required></textarea>
                     </div>
 
-                    <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer w-full">
+                    <button disabled={loading} type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md cursor-pointer w-full disabled:opacity-50 disabled:cursor-not-allowed">
                         {loading ? "Uploading your video please wait..." : "Upload Video"}
                     </button>
                 </form>
