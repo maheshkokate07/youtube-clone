@@ -1,5 +1,5 @@
 import Channel from "../models/channelModel.js";
-import User from "../models/UserModel.js";
+import User from "../models/userModel.js";
 import Video from "../models/videoModel.js";
 import cloudinary from "../config/cloudinary.js";
 
