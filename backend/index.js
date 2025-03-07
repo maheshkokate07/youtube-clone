@@ -6,6 +6,7 @@ import authRoutes from "./routes/authRoutes.js";
 import channelRoutes from "./routes/channelRoutes.js";
 import videoRoutes from "./routes/videoRoutes.js";
 import commentRoutes from "./routes/commentRoutes.js";
+import path from "path";
 
 dotenv.config();
 const app = express();
