@@ -26,7 +26,7 @@ function CommonLayout() {
         <div className="relative h-screen">
             <Header />
             <div
-                className={`fixed top-[67] left-0 h-full bg-white transition-all duration-300 z-50`}
+                className={`fixed top-[57px] left-0 h-full bg-white transition-all duration-300 z-50`}
             >
                 <Sidebar />
             </div>
