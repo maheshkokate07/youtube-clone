@@ -64,7 +64,7 @@ function Home() {
                 </div>
             )}
             {filteredVideos?.length > 0 ? (
-                <div className={`grid gap-5 grid-cols-1 md:grid-cols-2 mt-1 lg:grid-cols-3 ${isSidebarCompact ? "xl:grid-cols-4" : "xl:grid-cols-3"}`}>
+                <div className={`grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-2 mt-1 lg:grid-cols-3 ${isSidebarCompact ? "xl:grid-cols-4" : "xl:grid-cols-3"}`}>
                     {filteredVideos?.map((video) => <VideoCard key={video._id} video={video} />)}
                 </div>
             ) : (
