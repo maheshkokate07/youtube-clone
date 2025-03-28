@@ -70,16 +70,18 @@ function Comments({ videoId }) {
                 comments.length !== 0 && <h3 className="text-xl font-bold mb-2">{totalComments} Comments</h3>
             }
 
-            <div className="flex gap-2">
+            <div className="flex sm:gap-2">
                 <div className="flex-shrink-0">
-                    <img
-                        // Show user avatar if available either show default user image
-                        src={userData?.userAvatar ? userData?.userAvatar : user}
-                        alt="channel-avatar"
-                        className="w-12 h-12 rounded-full object-cover"
-                    />
+                    {
+                        <img
+                            // Show user avatar if available either show default user image
+                            src={userData?.userAvatar ? userData?.userAvatar : user}
+                            alt="channel-avatar"
+                            className="w-12 h-12 rounded-full object-cover hidden sm:block"
+                        />
+                    }
                 </div>
-                <div className="flex items-center gap-2 w-full">
+                <div className="flex  items-center gap-2 w-full">
                     <input
                         type="text"
                         className="flex-grow p-2 border border-gray-300 rounded-md h-10"
@@ -88,7 +90,7 @@ function Comments({ videoId }) {
                         onChange={(e) => setNewComment(e.target.value)}
                     />
                     <button
-                        disabled={!newComment}
+                        disabled={!newComment || loading}
                         className={`bg-blue-500 text-white px-4 h-10 py-2 rounded-md hover:bg-blue-600 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed`}
                         onClick={handleCommentSubmit}
                     >

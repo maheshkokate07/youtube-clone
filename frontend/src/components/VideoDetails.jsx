@@ -80,35 +80,41 @@ function VideoDetails({ video }) {
         <div>
             <h2 className="text-xl font-bold">{video.title}</h2>
 
-            <div className="flex items-center gap-3 mt-3">
-                <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
-                    <img
-                        src={video.channelId?.avatarUrl ? video.channelId.avatarUrl : user}
-                        alt="channel-avatar"
-                        className="w-12 h-12 rounded-full object-cover"
-                    />
+            <div className="flex flex-col items-start sm:flex-row sm:items-center gap-3 mt-3">
+                <div className="flex gap-2">
+
+                    <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
+                        <img
+                            src={video.channelId?.avatarUrl ? video.channelId.avatarUrl : user}
+                            alt="channel-avatar"
+                            className="w-12 h-12 rounded-full object-cover"
+                        />
+                    </div>
+                    <div className="flex flex-col cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
+                        {
+                            video.channelId?.channelName && <p className="text-[17px] font-semibold">{video.channelId?.channelName || "Unknown Channel"}</p>
+                        }
+                        <p className="text-[15px] text-gray-600">{totalSubscribers} subscribers</p>
+                    </div>
                 </div>
-                <div className="flex flex-col cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
-                    {
-                        video.channelId?.channelName && <p className="text-[17px] font-semibold">{video.channelId?.channelName || "Unknown Channel"}</p>
-                    }
-                    <p className="text-[15px] text-gray-600">{totalSubscribers} subscribers</p>
-                </div>
-                <div className="ml-1">
-                    <button
-                        onClick={handleSubscribe}
-                        className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
-                    >
-                        {isSubscribed ? "Unsubscribe" : "Subscribe"}
-                    </button>
-                </div>
-                <div className="flex bg-gray-200 rounded-lg overflow-hidden">
-                    <button className="flex items-center p-2 gap-2 hover:bg-gray-300 cursor-pointer pr-3 border-r border-gray-300" onClick={handleLike}>
-                        {isLiked ? <BiSolidLike size={24} /> : <BiLike size={24} />} {likes}
-                    </button>
-                    <button className="flex items-center gap-2 p-2 hover:bg-gray-300 cursor-pointer pl-3" onClick={handleDislike}>
-                        {isDisliked ? <BiSolidDislike size={24} /> : <BiDislike size={24} />} {dislikes}
-                    </button>
+                <div className="flex gap-2">
+
+                    <div className="ml-1">
+                        <button
+                            onClick={handleSubscribe}
+                            className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
+                        >
+                            {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                        </button>
+                    </div>
+                    <div className="flex bg-gray-200 rounded-lg overflow-hidden">
+                        <button className="flex items-center p-2 gap-2 hover:bg-gray-300 cursor-pointer pr-3 border-r border-gray-300" onClick={handleLike}>
+                            {isLiked ? <BiSolidLike size={24} /> : <BiLike size={24} />} {likes}
+                        </button>
+                        <button className="flex items-center gap-2 p-2 hover:bg-gray-300 cursor-pointer pl-3" onClick={handleDislike}>
+                            {isDisliked ? <BiSolidDislike size={24} /> : <BiDislike size={24} />} {dislikes}
+                        </button>
+                    </div>
                 </div>
             </div>
 

@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { useLayout } from "../context/LayoutContext.jsx";
 
 // Sidebar component
-function Sidebar() {
+function Sidebar({ setIsSidebarVisible }) {
 
     const { data: userData } = useSelector(state => state?.auth?.user);
     const location = useLocation();
@@ -31,7 +31,7 @@ function Sidebar() {
             <ul className="py-2">
                 {navItems.map((item, index) => (
                     <div key={item.name}>
-                        <li>
+                        <li onClick={() => setIsSidebarVisible(false)}>
                             <Link to={item.path} className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer hover:bg-gray-200 ${location.pathname.includes(item.accessor) ? "bg-gray-100" : ""}`}>
                                 <div className="w-[17%]">
                                     {item.icon}
