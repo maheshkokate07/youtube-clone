@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
@@ -18,6 +18,7 @@ function Channel() {
     const [loading, setLoading] = useState(true);
     const [isSubscribed, setIsSubscribed] = useState(userData?.subscribedChannels?.includes(channelId));
     const [totalSubscribers, setTotalSubscribers] = useState(0);
+    const [subscribeLoading, setSubscribeLoading] = useState(false);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -46,6 +47,7 @@ function Channel() {
     // Function for handling subscribe
     const handleSubscribe = async () => {
         try {
+            setSubscribeLoading(true);
             await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${channelId}`, { userId: userData._id });
             dispatch(fetchUserProfile());
             if (isSubscribed) {
@@ -56,6 +58,8 @@ function Channel() {
             setIsSubscribed(!isSubscribed);
         } catch (err) {
             console.log("Error subscribing channel", err)
+        } finally {
+            setSubscribeLoading(false);
         }
     };
 
@@ -63,7 +67,7 @@ function Channel() {
 
     return (
         <div className="w-full h-[calc(100vh-57px)] overflow-auto mx-auto p-4">
-            <div className="flex items-center gap-6">
+            <div className="flex sm:items-center gap-6 flex-col sm:flex-row items-start">
                 <img src={channel.avatarUrl ? channel.avatarUrl : userImg} alt="Channel Avatar" className="w-24 h-24 rounded-full object-cover" />
                 <div className="flex gap-4">
                     <div>
@@ -84,7 +88,8 @@ function Channel() {
                         onClick={handleSubscribe}
                         className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
                     >
-                        {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                        {!subscribeLoading && (isSubscribed ? "Unsubscribe" : "Subscribe")}
+                        {subscribeLoading && <div className="w-6 h-6 border-4 border-t-4 border-r-4 border-gray-200 border-t-red-500 border-r-red-500 rounded-full animate-spin"></div>}
                     </button>
                 }
             </div>

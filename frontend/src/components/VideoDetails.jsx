@@ -1,5 +1,5 @@
 import { BiLike, BiDislike, BiSolidLike, BiSolidDislike } from "react-icons/bi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import user from "../assets/user.svg"
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +12,9 @@ function VideoDetails({ video }) {
     const [dislikes, setDislikes] = useState(video.dislikes?.length);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [likeLoading, setLikeLoading] = useState(false);
+    const [dislikeLoading, setDislikeLoading] = useState(false);
 
     const { data: userData, token } = useSelector(state => state.auth.user);
 
@@ -21,9 +24,19 @@ function VideoDetails({ video }) {
     const [isDisliked, setIsDisliked] = useState(video.dislikes?.includes(userData._id));
     const [totalSubscribers, setTotalSubscribers] = useState(video?.channelId?.subscribers.length);
 
+    useEffect(() => {
+        setLikes(video.likes?.length);
+        setDislikes(video.dislikes?.length);
+        setIsSubscribed(userData?.subscribedChannels?.includes(video.channelId?._id));
+        setIsLiked(video.likes?.includes(userData._id));
+        setIsDisliked(video.dislikes?.includes(userData._id));
+        setTotalSubscribers(video?.channelId?.subscribers.length);
+    }, [video])
+
     // Function for handle like
     const handleLike = async () => {
         try {
+            setLikeLoading(true);
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/like-video/${video._id}`, { userId: userData._id });
             setLikes(response?.data?.likes);
             setDislikes(response?.data?.dislikes);
@@ -37,12 +50,15 @@ function VideoDetails({ video }) {
             }
         } catch (err) {
             console.error("Error liking video", err);
+        } finally {
+            setLikeLoading(false);
         }
     };
 
     // Function for dislike
     const handleDislike = async () => {
         try {
+            setDislikeLoading(true);
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/dislike-video/${video._id}`, { userId: userData._id });
             setLikes(response?.data?.likes);
             setDislikes(response?.data?.dislikes);
@@ -55,12 +71,15 @@ function VideoDetails({ video }) {
             }
         } catch (err) {
             console.error("Error disliking video", err);
+        } finally {
+            setDislikeLoading(false);
         }
     };
 
     // Function for subscribing the channel
     const handleSubscribe = async () => {
         try {
+            setLoading(true);
             await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${video.channelId?._id}`, { userId: userData._id });
             dispatch(fetchUserProfile());
 
@@ -73,6 +92,8 @@ function VideoDetails({ video }) {
             setIsSubscribed(!isSubscribed);
         } catch (err) {
             console.log("Error subscribing channel", err)
+        } finally {
+            setLoading(false);
         }
     }
 
@@ -104,15 +125,18 @@ function VideoDetails({ video }) {
                             onClick={handleSubscribe}
                             className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
                         >
-                            {isSubscribed ? "Unsubscribe" : "Subscribe"}
+                            {!loading && (isSubscribed ? "Unsubscribe" : "Subscribe")}
+                            {loading && <div className="w-6 h-6 border-4 border-t-4 border-r-4 border-gray-200 border-t-red-500 border-r-red-500 rounded-full animate-spin"></div>}
                         </button>
                     </div>
                     <div className="flex bg-gray-200 rounded-lg overflow-hidden">
                         <button className="flex items-center p-2 gap-2 hover:bg-gray-300 cursor-pointer pr-3 border-r border-gray-300" onClick={handleLike}>
-                            {isLiked ? <BiSolidLike size={24} /> : <BiLike size={24} />} {likes}
+                            {!likeLoading && (isLiked ? <BiSolidLike size={24} /> : <BiLike size={24} />)} {!likeLoading && likes}
+                            {likeLoading && <div className="w-6 h-6 border-4 border-t-4 border-r-4 border-gray-200 border-t-red-500 border-r-red-500 rounded-full animate-spin"></div>}
                         </button>
                         <button className="flex items-center gap-2 p-2 hover:bg-gray-300 cursor-pointer pl-3" onClick={handleDislike}>
-                            {isDisliked ? <BiSolidDislike size={24} /> : <BiDislike size={24} />} {dislikes}
+                            {!dislikeLoading && (isDisliked ? <BiSolidDislike size={24} /> : <BiDislike size={24} />)} {!dislikeLoading && dislikes}
+                            {dislikeLoading && <div className="w-6 h-6 border-4 border-t-4 border-r-4 border-gray-200 border-t-red-500 border-r-red-500 rounded-full animate-spin"></div>}
                         </button>
                     </div>
                 </div>
