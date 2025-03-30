@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { LayoutProvider } from './context/LayoutContext.jsx';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
         <BrowserRouter>
@@ -19,5 +19,5 @@ createRoot(document.getElementById('root')).render(
         </BrowserRouter>
       </PersistGate>
     </Provider>
-  </StrictMode>
+  // </StrictMode>
 )

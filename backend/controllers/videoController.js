@@ -1,7 +1,9 @@
 import Channel from "../models/channelModel.js";
 import User from "../models/userModel.js";
 import Video from "../models/videoModel.js";
+import Notification from "../models/notificationModel.js";
 import cloudinary from "../config/cloudinary.js";
+import { io, onlineUsers } from "../index.js";
 
 // Controller for upload video
 export const uploadVideo = async (req, res) => {
@@ -64,6 +66,29 @@ export const uploadVideo = async (req, res) => {
         // Push videoId in channel's video array to identify the channel videos
         channel.videos.push(newVideo._id);
         await channel.save();
+
+        // Notification logic
+        const notification = new Notification({
+            message: `${user.userName} uploaded a new video`,
+            description: newVideo.title,
+            videoId: newVideo._id,
+            creator: uploaderId
+        });
+
+        const savedNotification = await notification.save();
+
+        await User.updateMany(
+            { _id: { $in: channel.subscribers } },
+            { $push: { notifications: { notificationId: savedNotification._id, isRead: false } } }
+        );
+
+        // Notify all subscribers
+        channel.subscribers.forEach(subscriberId => {
+            const socketId = onlineUsers.get(subscriberId.toString());
+            if (socketId) {
+                io.to(socketId).emit("newNotification", savedNotification);
+            }
+        });
 
         res.status(200).json({ message: "Video uploaded successfully", video: newVideo })
     } catch (err) {

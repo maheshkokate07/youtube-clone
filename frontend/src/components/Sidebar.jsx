@@ -1,5 +1,6 @@
 import { IoMdHome } from "react-icons/io";
-import { MdSubscriptions, MdOutlineSmartDisplay, MdOutlineWatchLater, MdHistory, MdPlaylistPlay, MdLogout } from "react-icons/md";
+import { IoNotificationsOutline } from "react-icons/io5";
+import { MdSubscriptions, MdOutlineSmartDisplay, MdOutlineWatchLater, MdHistory, MdPlaylistPlay } from "react-icons/md";
 import { SiYoutubeshorts } from "react-icons/si";
 import { BiLike } from "react-icons/bi";
 import { Link, useLocation } from "react-router-dom";
@@ -9,7 +10,7 @@ import { useLayout } from "../context/LayoutContext.jsx";
 // Sidebar component
 function Sidebar({ setIsSidebarVisible }) {
 
-    const { data: userData } = useSelector(state => state?.auth?.user);
+    const { isAuthenticated, data: userData } = useSelector(state => state?.auth?.user);
     const location = useLocation();
 
     const { isSidebarCompact } = useLayout();
@@ -22,6 +23,7 @@ function Sidebar({ setIsSidebarVisible }) {
         { name: "Playlists", accessor: "/playlist", icon: <MdPlaylistPlay size={26} />, path: "/home" },
         // Show channel link only when user has channel
         userData?.channel && { name: "Your videos", accessor: "/channel", icon: <MdOutlineSmartDisplay size={22} />, path: `/channel/${userData?.channel}` },
+        isAuthenticated && { name: "Notifications", accessor: "/notifications", icon: <IoNotificationsOutline size={24} />, path: "/notifications" },
         { name: "Watch later", accessor: "/watch-later", icon: <MdOutlineWatchLater size={24} />, path: "/home" },
         { name: "Liked videos", accessor: "/liked", icon: <BiLike size={24} />, path: "/home" },
     ].filter(Boolean);

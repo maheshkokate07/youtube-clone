@@ -10,6 +10,7 @@ import Channel from "../pages/Channel";
 import Account from "../pages/Account";
 import UploadVideo from "../pages/UploadVideo";
 import WatchVideo from "../pages/WatchVideo";
+import Notifications from "../pages/Notifications";
 
 const AppRoutes = () => {
 
@@ -74,6 +75,13 @@ const AppRoutes = () => {
                         path="/watch/:videoId"
                         element={
                             <WatchVideo />
+                        }
+                    />
+
+                    <Route
+                        path="/notifications"
+                        element={
+                            <Notifications />
                         }
                     />
                 </Route>

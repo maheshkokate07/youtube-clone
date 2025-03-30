@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
     }],
     subscribedChannels: [{
         type: mongoose.Schema.Types.ObjectId, ref: "Channel"
+    }],
+    notifications: [{
+        notificationId: { type: mongoose.Schema.Types.ObjectId, ref: "Notification" },
+        isRead: { type: Boolean, default: false }
     }]
 })
 

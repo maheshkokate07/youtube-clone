@@ -1,7 +1,8 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import authReducer from "./slices/authSlice";
 import videoReducer from "./slices/videoSlice"
-import {persistReducer, persistStore} from "redux-persist";
+import notificationReducer from "./slices/notificationSlice";
+import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 
 // config persist root to persist to persist our store after reload
@@ -12,7 +13,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     auth: authReducer,
-    videos: videoReducer
+    videos: videoReducer,
+    notifications: notificationReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

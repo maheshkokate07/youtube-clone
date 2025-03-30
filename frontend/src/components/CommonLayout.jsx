@@ -40,7 +40,7 @@ function CommonLayout() {
 
     return (
         <div className="relative h-screen">
-            <Header toggleSidebar={toggleSidebar} />
+            <Header toggleSidebar={toggleSidebar} screenWidth={screenWidth} />
             <div
                 className={`fixed top-[57px] left-0 h-[calc(100vh-57px)] bg-white transition-all duration-300 z-50 ${screenWidth < 800
                     ? `${isSidebarVisible ? "translate-x-0" : "-translate-x-full"} w-[230px]`

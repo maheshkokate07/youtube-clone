@@ -15,6 +15,8 @@ function VideoDetails({ video }) {
     const [loading, setLoading] = useState(false);
     const [likeLoading, setLikeLoading] = useState(false);
     const [dislikeLoading, setDislikeLoading] = useState(false);
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [shortDescription, setShortDescription] = useState(video.description.length > 180 ? video.description.slice(0, 180) : "");
 
     const { data: userData, token } = useSelector(state => state.auth.user);
 
@@ -31,6 +33,8 @@ function VideoDetails({ video }) {
         setIsLiked(video.likes?.includes(userData._id));
         setIsDisliked(video.dislikes?.includes(userData._id));
         setTotalSubscribers(video?.channelId?.subscribers.length);
+        setShortDescription(video.description.length > 180 ? video.description.slice(0, 180) : "")
+        setIsExpanded(false);
     }, [video])
 
     // Function for handle like
@@ -144,7 +148,17 @@ function VideoDetails({ video }) {
 
             <div className="mt-4 rounded-lg bg-gray-200 p-3">
                 <p className="text-[15px] font-semibold">{video.views} views <span className="ml-2">{new Date(video.uploadDate).toDateString().split(" ").slice(-3).join(" ")}</span></p>
-                <p className=" text-gray-700">{video.description}</p>
+                <p className="text-gray-700">
+                    {(isExpanded || !shortDescription) ? video.description : shortDescription}
+                    {video.description.length > 180 && (
+                        <span 
+                            className="text-blue-700 font-semibold cursor-pointer"
+                            onClick={() => setIsExpanded(!isExpanded)}
+                        >
+                            {isExpanded ? " show less" : " ...more"}
+                        </span>
+                    )}
+                </p>
             </div>
         </div>
     );
