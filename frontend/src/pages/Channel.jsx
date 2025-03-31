@@ -7,6 +7,7 @@ import VideoCard from "../components/VideoCard";
 import { MdEdit } from "react-icons/md";
 import CreateChannelModal from "../components/CreateChannelModal";
 import { fetchUserProfile } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 // Channel page
 function Channel() {
@@ -50,6 +51,7 @@ function Channel() {
             setSubscribeLoading(true);
             await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${channelId}`, { userId: userData._id });
             dispatch(fetchUserProfile());
+            toast.success(response?.data?.message)
             if (isSubscribed) {
                 setTotalSubscribers(totalSubscribers - 1);
             } else {

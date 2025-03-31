@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { markNotificationRead, markNotificationUnread } from "../store/slices/notificationSlice";
 import ViewNotificationModal from "../components/ViewNotificationModal";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Notifications() {
     const dispatch = useDispatch();
@@ -12,9 +13,10 @@ function Notifications() {
 
     const handleReadNotification = async (id) => {
         try {
-            const response = axios.put(`${import.meta.env.VITE_API_URL}/api/read-notification/${id}`, {
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/read-notification/${id}`, {
                 userId: userData._id
             })
+            toast.success(response?.data?.message)
             dispatch(markNotificationRead(id));
         } catch (err) {
             console.log(err);
@@ -23,9 +25,10 @@ function Notifications() {
 
     const handleUnreadNotification = async (id) => {
         try {
-            const response = axios.put(`${import.meta.env.VITE_API_URL}/api/unread-notification/${id}`, {
+            const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/unread-notification/${id}`, {
                 userId: userData._id
             })
+            toast.success(response?.data?.message)
             dispatch(markNotificationUnread(id));
         } catch (err) {
             console.log(err);

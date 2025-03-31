@@ -3,6 +3,7 @@ import axios from "axios";
 import user from "../assets/user.svg"
 import { useSelector } from "react-redux";
 import { MdDeleteSweep } from "react-icons/md";
+import { toast } from "react-toastify";
 
 // Comments component for showing comments down the video
 function Comments({ videoId }) {
@@ -34,11 +35,12 @@ function Comments({ videoId }) {
     const handleCommentSubmit = async () => {
         try {
             setLoading(true);
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/comments/add`, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/comments/add`, {
                 userId: userData._id,
                 videoId,
                 text: newComment
             });
+            toast.success(response?.data?.message);
             setNewComment("");
 
             // Fetch comments again when the comment added
@@ -53,8 +55,8 @@ function Comments({ videoId }) {
     // Function for delete comment
     const handleDeleteComment = async (commentId) => {
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-comment/${commentId}`);
-
+            const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-comment/${commentId}`);
+            toast.success(response?.data?.message)
             // Fetch comments again when the comment deleted
             fetchComments();
         } catch (err) {

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../store/slices/authSlice";
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const [credentials, setCredentials] = useState({ email: "", password: "" });
@@ -28,6 +29,9 @@ const Login = () => {
         if (result.payload?.token) {
             // Redirect to home after successful login
             navigate("/home");
+            toast.success("Login successful");
+        } else {
+            toast.error(result.payload);
         }
     };
 

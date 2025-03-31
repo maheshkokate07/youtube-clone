@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 const Register = () => {
     const [payload, setPayload] = useState({ userName: "", email: "", password: "" });
@@ -26,6 +27,7 @@ const Register = () => {
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/user/register`, payload, config);
             setIsLoading(false);
             navigate("/login");
+            toast.success(response?.data?.message)
         } catch (err) {
             console.log(err);
         } finally {

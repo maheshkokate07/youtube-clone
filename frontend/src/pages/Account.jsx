@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
 import userImg from "../assets/user.svg";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 // Account page
 function Account() {
@@ -40,6 +41,7 @@ function Account() {
             }
             const response = await axios.put(`${import.meta.env.VITE_API_URL}/api/user/update-profile/${userData._id}`, formData, config);
             dispatch(fetchUserProfile());
+            toast.success(response?.data?.message)
         } catch (err) {
             console.log(err);
         } finally {

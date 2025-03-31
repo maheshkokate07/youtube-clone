@@ -5,9 +5,11 @@ import user from "../assets/user.svg"
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // Video Details component
 function VideoDetails({ video }) {
+    console.log("VIdeo => ", video);
     const [likes, setLikes] = useState(video.likes?.length);
     const [dislikes, setDislikes] = useState(video.dislikes?.length);
     const dispatch = useDispatch();
@@ -84,7 +86,8 @@ function VideoDetails({ video }) {
     const handleSubscribe = async () => {
         try {
             setLoading(true);
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${video.channelId?._id}`, { userId: userData._id });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${video.channelId?._id}`, { userId: userData._id });
+            toast.success(response?.data?.message)
             dispatch(fetchUserProfile());
 
             // Handle subscribed and count state locally to avoid API call when subscribe or unsubscribe 
@@ -105,9 +108,8 @@ function VideoDetails({ video }) {
         <div>
             <h2 className="text-xl font-bold">{video.title}</h2>
 
-            <div className="flex flex-col items-start sm:flex-row sm:items-center gap-3 mt-3">
-                <div className="flex gap-2">
-
+            <div className="flex flex-col items-start sm:flex-row sm:items-center gap-3 mt-3 justify-between">
+                <div className="flex items-center gap-2">
                     <div className="flex-shrink-0 cursor-pointer" onClick={() => navigate(`/channel/${video.channelId._id}`)}>
                         <img
                             src={video.channelId?.avatarUrl ? video.channelId.avatarUrl : user}
@@ -121,18 +123,19 @@ function VideoDetails({ video }) {
                         }
                         <p className="text-[15px] text-gray-600">{totalSubscribers} subscribers</p>
                     </div>
+                    {
+                        (video.uploader !== userData._id) && <div className="ml-1">
+                            <button
+                                onClick={handleSubscribe}
+                                className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
+                            >
+                                {!loading && (isSubscribed ? "Unsubscribe" : "Subscribe")}
+                                {loading && <div className="w-6 h-6 border-4 border-t-4 border-r-4 border-gray-200 border-t-red-500 border-r-red-500 rounded-full animate-spin"></div>}
+                            </button>
+                        </div>
+                    }
                 </div>
                 <div className="flex gap-2">
-
-                    <div className="ml-1">
-                        <button
-                            onClick={handleSubscribe}
-                            className={`px-4 py-2 cursor-pointer rounded-lg text-white font-semibold ${isSubscribed ? "bg-gray-500 hover:bg-gray-600" : "bg-red-500 hover:bg-red-600"}`}
-                        >
-                            {!loading && (isSubscribed ? "Unsubscribe" : "Subscribe")}
-                            {loading && <div className="w-6 h-6 border-4 border-t-4 border-r-4 border-gray-200 border-t-red-500 border-r-red-500 rounded-full animate-spin"></div>}
-                        </button>
-                    </div>
                     <div className="flex bg-gray-200 rounded-lg overflow-hidden">
                         <button className="flex items-center p-2 gap-2 hover:bg-gray-300 cursor-pointer pr-3 border-r border-gray-300" onClick={handleLike}>
                             {!likeLoading && (isLiked ? <BiSolidLike size={24} /> : <BiLike size={24} />)} {!likeLoading && likes}
@@ -151,7 +154,7 @@ function VideoDetails({ video }) {
                 <p className="text-gray-700">
                     {(isExpanded || !shortDescription) ? video.description : shortDescription}
                     {video.description.length > 180 && (
-                        <span 
+                        <span
                             className="text-blue-700 font-semibold cursor-pointer"
                             onClick={() => setIsExpanded(!isExpanded)}
                         >

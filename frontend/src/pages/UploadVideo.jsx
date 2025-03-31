@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // Upload video page
 function UploadVideo() {
@@ -54,9 +55,10 @@ function UploadVideo() {
             if (thumbnailFile) formData.append("thumbnail", thumbnailFile);
 
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/upload-video`, formData, config);
-            
+
             // Navigate home after video upload
             navigate("/home");
+            toast.success(response?.data?.message)
         } catch (err) {
             console.log(err)
         } finally {

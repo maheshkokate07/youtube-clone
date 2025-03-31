@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUserProfile } from "../store/slices/authSlice";
+import { toast } from "react-toastify";
 
 // Modal for create channel
 function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannelData }) {
@@ -63,13 +64,15 @@ function CreateChannelModal({ isOpen, onClose, isEditting, channel, fetchChannel
             setIsLoading(true);
             if (isEditting) {
                 const response = await axios.put(apiEndPoint, formData, config);
+                toast.success(response?.data?.message);
             } else {
                 const response = await axios.post(apiEndPoint, formData, config);
+                toast.success(response?.data?.message);
             }
-            
+
             // Fetch user pofile again when we create or edit channel
             dispatch(fetchUserProfile());
-            
+
             if (isEditting) {
                 // Fetch channel data again if we edited channel
                 fetchChannelData();

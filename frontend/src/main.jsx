@@ -7,6 +7,8 @@ import store, { persistor } from './store/store.js'
 import { PersistGate } from 'redux-persist/integration/react'
 import { BrowserRouter } from 'react-router-dom';
 import { LayoutProvider } from './context/LayoutContext.jsx';
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -15,6 +17,7 @@ createRoot(document.getElementById('root')).render(
         <BrowserRouter>
           <LayoutProvider>
             <App />
+            <ToastContainer position="top-right" autoClose={3000} />
           </LayoutProvider>
         </BrowserRouter>
       </PersistGate>

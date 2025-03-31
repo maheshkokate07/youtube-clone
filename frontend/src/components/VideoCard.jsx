@@ -5,6 +5,7 @@ import { MdDeleteSweep } from "react-icons/md";
 import axios from "axios";
 import { useState } from "react";
 import ConfirmationModal from "./ConfirmationModal";
+import { toast } from "react-toastify";
 
 // Video card component
 function VideoCard({ video, showDelete, fetchChannelData }) {
@@ -34,7 +35,7 @@ function VideoCard({ video, showDelete, fetchChannelData }) {
             }
 
             const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/delete-video/${deleteId}`, config);
-
+            toast.success(response?.data?.message)
             // Fetch channel data again after deleting video
             fetchChannelData();
         } catch (err) {

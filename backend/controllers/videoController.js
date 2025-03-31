@@ -243,7 +243,7 @@ export const likeVideo = async (req, res) => {
             ...likeAction
         }, { new: true });
 
-        res.status(200).json({ message: "Likes updated", likes: updatedVideo.likes.length, dislikes: updatedVideo.dislikes.length });
+        res.status(200).json({ message: "Video liked", likes: updatedVideo.likes.length, dislikes: updatedVideo.dislikes.length });
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }
@@ -272,7 +272,7 @@ export const dislikeVideo = async (req, res) => {
             ...dislikeAction
         }, { new: true });
 
-        res.status(200).json({ message: "Dislikes updated", likes: updatedVideo.likes.length, dislikes: updatedVideo.dislikes.length });
+        res.status(200).json({ message: "Video disliked", likes: updatedVideo.likes.length, dislikes: updatedVideo.dislikes.length });
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message })
     }

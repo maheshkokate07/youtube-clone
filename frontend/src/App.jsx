@@ -2,12 +2,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { decodeToken } from '../utils/decodeJwt.js';
 import './App.css'
 import AppRoutes from './routes/index.jsx';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { logout } from './store/slices/authSlice.js';
 import socket from '../utils/socket.js';
 import { addNewNotification, resetNotifications } from './store/slices/notificationSlice.js';
 
 import notificationSound from "./assets/notification.wav";
+import { toast } from 'react-toastify';
 
 function App() {
 
@@ -50,7 +51,9 @@ function App() {
 
       // Play notification sound
       const audio = new Audio(notificationSound);
-      audio.play().catch((error) => console.error("Audio play failed", error));
+      audio.play().then(() => {
+        toast.info("New notification received")
+      }).catch((error) => console.error("Audio play failed", error));
     });
 
     return () => {
