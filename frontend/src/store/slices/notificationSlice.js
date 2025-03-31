@@ -23,7 +23,7 @@ const notificationSlice = createSlice({
     },
     reducers: {
         resetNotifications: (state) => {
-            state.notifications = { notifications: null }
+            state.notifications = [];
         },
         markNotificationRead: (state, action) => {
             const notification = state.notifications.find(n => n.notificationId._id === action.payload);

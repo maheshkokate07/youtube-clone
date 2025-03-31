@@ -10,7 +10,7 @@ export const getNotifications = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         res.status(200).json({
-            notifications: user.notifications
+            notifications: user.notifications.reverse()
         });
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err.message });

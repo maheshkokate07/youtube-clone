@@ -10,7 +10,7 @@ import { fetchUserProfile, logout } from "../store/slices/authSlice";
 import CreateChannelModal from "./CreateChannelModal";
 import ConfirmationModal from "./ConfirmationModal";
 import { useLayout } from "../context/LayoutContext.jsx";
-import { fetchNotifications } from "../store/slices/notificationSlice.js";
+import { fetchNotifications, resetNotifications } from "../store/slices/notificationSlice.js";
 import { MdOutlineNotificationsNone } from "react-icons/md";
 import { RxCross2 } from "react-icons/rx";
 
@@ -36,6 +36,7 @@ function Header({ toggleSidebar, screenWidth }) {
 
     const handleLogout = () => {
         dispatch(logout());
+        dispatch(resetNotifications());
         window.location.reload();
     };
 
@@ -165,7 +166,7 @@ function Header({ toggleSidebar, screenWidth }) {
                                             <MdOutlineNotificationsNone size="30" />
                                         </span>
                                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                                            {notifications?.length || 0}
+                                            {(notifications ?? []).filter((n) => !n.isRead).length || 0}
                                         </span>
                                     </div>
                                 </div>

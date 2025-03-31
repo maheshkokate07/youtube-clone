@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchNotifications, markNotificationRead, markNotificationUnread } from "../store/slices/notificationSlice";
+import { markNotificationRead, markNotificationUnread } from "../store/slices/notificationSlice";
 import ViewNotificationModal from "../components/ViewNotificationModal";
 import axios from "axios";
 
@@ -9,12 +9,6 @@ function Notifications() {
     const { notifications, loading } = useSelector((state) => state.notifications);
     const { data: userData } = useSelector(state => state.auth.user);
     const [selectedNotification, setSelectedNotification] = useState(null);
-
-    // useEffect(() => {
-    //     if (userData) {
-    //         dispatch(fetchNotifications(userData._id));
-    //     }
-    // }, [userData]);
 
     const handleReadNotification = async (id) => {
         try {
@@ -39,11 +33,11 @@ function Notifications() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto p-5">
+        <div className="px-4 py-1 w-full h-[calc(100vh-57px)] overflow-auto">
             <div className="flex items-center justify-between mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">Notifications</h2>
                 <span className="text-sm text-gray-500">
-                    {notifications.length} {notifications.length === 1 ? "alert" : "alerts"}
+                    {notifications?.filter((n) => !n.isRead).length} {notifications.length === 1 ? "unread alert" : "unread alerts"}
                 </span>
             </div>
 
@@ -63,7 +57,7 @@ function Notifications() {
                             key={notif.notificationId._id}
                             onClick={() => setSelectedNotification(notif)}
                             className={`p-4 cursor-pointer border rounded-lg shadow-sm flex justify-between items-center transition-all duration-200 ${notif.isRead
-                                ? "bg-gray-50 hover:bg-gray-100 font-semibold border-red-200"
+                                ? "bg-gray-50 hover:bg-gray-100 font-semibold border-red-100"
                                 : "bg-white hover:bg-red-50 font-semibold border-red-200"
                                 }`}
                         >
@@ -80,13 +74,13 @@ function Notifications() {
                                     </p>
                                 </div>
                             </div>
-                            <button className="text-sm cursor-pointer text-red-600 hover:underline"
+                            <button className="text-sm cursor-pointer"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     notif.isRead ? handleUnreadNotification(notif.notificationId._id) : handleReadNotification(notif.notificationId._id)
                                 }}
                             >
-                                {notif.isRead ? "Mark unread" : "Mark read"}
+                                {notif.isRead ? <span className="text-gray-600 hover:underline">Mark unread</span> : <span className="text-red-600 hover:underline">Mark read</span>}
                             </button>
                         </div>
                     ))}

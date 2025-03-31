@@ -5,13 +5,13 @@ import AppRoutes from './routes/index.jsx';
 import { useEffect, useState } from 'react';
 import { logout } from './store/slices/authSlice.js';
 import socket from '../utils/socket.js';
-import { addNewNotification } from './store/slices/notificationSlice.js';
+import { addNewNotification, resetNotifications } from './store/slices/notificationSlice.js';
+
+import notificationSound from "./assets/notification.wav";
 
 function App() {
 
   const { token, data: userData } = useSelector(state => state?.auth?.user);
-
-  const [notifications, setNotifications] = useState([]);
 
   // Calculate current epoch time
   const epochTime = Math.floor(Date.now() / 1000);
@@ -26,9 +26,11 @@ function App() {
         // If token expired then dispatch the logout slice and log out the user
         if (decodedToken.exp < epochTime) {
           dispatch(logout());
+          dispatch(resetNotifications());
         }
       } catch (error) {
         dispatch(logout());
+        dispatch(resetNotifications());
       }
     }
   }, []);
@@ -45,6 +47,10 @@ function App() {
         notificationId: notification,
         isRead: false
       }))
+
+      // Play notification sound
+      const audio = new Audio(notificationSound);
+      audio.play().catch((error) => console.error("Audio play failed", error));
     });
 
     return () => {
