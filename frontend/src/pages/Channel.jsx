@@ -49,7 +49,7 @@ function Channel() {
     const handleSubscribe = async () => {
         try {
             setSubscribeLoading(true);
-            await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${channelId}`, { userId: userData._id });
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/channel/subscribe/${channelId}`, { userId: userData._id });
             dispatch(fetchUserProfile());
             toast.success(response?.data?.message)
             if (isSubscribed) {
