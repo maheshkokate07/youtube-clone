@@ -43,17 +43,17 @@ function App() {
     }
 
     // Listen for new notifications
-    socket.on("newNotification", (notification) => {
+    socket.on("newNotification", async (notification) => {
       dispatch(addNewNotification({
         notificationId: notification,
         isRead: false
       }))
 
-      // Play notification sound
+      // Play notification sound only after user interaction
       const audio = new Audio(notificationSound);
-      audio.play().then(() => {
-        toast.info("New notification received")
-      }).catch((error) => console.error("Audio play failed", error));
+      audio.play()
+
+      toast.info(notification?.message);
     });
 
     return () => {
@@ -64,7 +64,7 @@ function App() {
   useEffect(() => {
     return () => {
       if (userData) {
-        socket.on("leave", userData._id);
+        socket.emit("leave", userData._id);
       }
       socket.disconnect();
     };
